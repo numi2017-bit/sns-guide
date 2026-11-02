@@ -101,7 +101,7 @@ if(hover){document.addEventListener('mouseover',e=>{const t=e.target.closest('.t
   document.addEventListener('mouseout',e=>{const t=e.target.closest('.term');if(t&&!(e.relatedTarget&&e.relatedTarget.closest&&e.relatedTarget.closest('.tip')))hideT=setTimeout(closeTip,150);});}
 addEventListener('scroll',()=>{},{passive:true});
 const links=[...document.querySelectorAll('nav a')],secs=links.map(a=>document.querySelector(a.getAttribute('href')));
-const io=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting){links.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+en.target.id));const on=document.querySelector('nav a.on');if(on)on.scrollIntoView({block:'nearest',inline:'center'});}})},{rootMargin:'-40% 0px -55% 0px'});
+const io=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting){links.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+en.target.id));const on=document.querySelector('nav a.on'),nv=document.querySelector('nav');if(on&&nv)nv.scrollLeft=on.offsetLeft-nv.clientWidth/2+on.clientWidth/2;}})},{rootMargin:'-40% 0px -55% 0px'});
 secs.forEach(s=>s&&io.observe(s));
 </script>
 </body>
