@@ -36,6 +36,12 @@
 .bm-chip.own{border-color:transparent;background:var(--color-fg);color:var(--color-bg)}
 .bm-chip.new{border-color:var(--color-ok);color:var(--color-ok)}
 .bm-empty{color:var(--color-fg-muted);padding:var(--cds-pad-lg) 0}
+.bm-list{list-style:none;margin:0;padding:0;display:grid;gap:var(--cds-gap-sm)}
+.bm-list li{line-height:1.5;min-width:0;overflow-wrap:anywhere}
+.bm-list a{color:var(--color-fg);text-decoration:none}
+.bm-list a:hover,.bm-list a:focus-visible{text-decoration:underline}
+.bm-list .src{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted)}
+.bm-list .bm-empty{padding:0}
 </style>
 
 <div class="bm">
@@ -53,6 +59,23 @@
     <div class="bm-group">
       <h3>경쟁사 · 최근 수집분</h3>
       <div class="bm-tiles" data-draw="tiles-rival" data-source="by_brand"></div>
+    </div>
+  </section>
+
+  <section id="brief" class="bm-groups">
+    <div class="bm-group">
+      <h2>오늘 요약 · 주요 글</h2>
+      <p class="note">최근 수집분에서 자사 글을 먼저, 그다음 경쟁사 글을 최신순으로 6개까지 보여 줍니다.</p>
+      <ul class="bm-list" data-draw="brief-top" data-source="items"></ul>
+    </div>
+    <div class="bm-group">
+      <h2>유튜브 새 영상</h2>
+      <p class="note">공식 채널 새 영상과, 제목·채널명에 브랜드가 들어간 오늘 업로드 영상입니다.</p>
+      <ul class="bm-list" data-draw="brief-yt" data-source="items"></ul>
+    </div>
+    <div class="bm-group">
+      <h2>인스타그램</h2>
+      <p class="note">아직 수집하지 않습니다. 인스타그램은 로그인 없이 게시물을 읽을 수 없어서, 회사 인스타그램 비즈니스 계정을 Meta 개발자 앱에 연결해야 공식 계정 새 게시물을 가져올 수 있습니다.</p>
     </div>
   </section>
 
@@ -174,6 +197,28 @@ dash.calc('daily', {
       }
     };
   }
+  function briefList(pick, limit) {
+    return (ul) => {
+      const g = dash.data('items');
+      ul.replaceChildren();
+      if (g.status !== 'ok') { const li = document.createElement('li'); li.textContent = '—'; ul.append(li); return; }
+      const last = g.data.reduce((m, r) => (r['수집일'] > m ? r['수집일'] : m), '');
+      const rows = pick(g.data.filter((r) => r['수집일'] === last)).slice(0, limit);
+      if (!rows.length) { const li = document.createElement('li'); li.className = 'bm-empty'; li.textContent = '최근 수집분에 해당 글이 없습니다.'; ul.append(li); return; }
+      for (const r of rows) {
+        const li = document.createElement('li');
+        const chip = document.createElement('span'); chip.className = 'bm-chip' + (r['구분'] === '자사' ? ' own' : ''); chip.textContent = r['브랜드'];
+        const a = document.createElement('a'); a.href = r['링크']; a.target = '_blank'; a.rel = 'noopener'; a.textContent = r['제목'];
+        const src = document.createElement('span'); src.className = 'src'; src.textContent = r['출처'] + (r['채널'] === '유튜브' ? ' · ' + r['유형'] : '');
+        li.append(chip, ' ', a, ' ', src);
+        ul.append(li);
+      }
+    };
+  }
+  const byTime = (a, b) => (a['게시시각'] < b['게시시각'] ? 1 : -1);
+  dash.draw('brief-top', briefList((rs) => [...rs.filter((r) => r['구분'] === '자사').sort(byTime), ...rs.filter((r) => r['구분'] !== '자사').sort(byTime)], 6));
+  dash.draw('brief-yt', briefList((rs) => rs.filter((r) => r['채널'] === '유튜브').sort(byTime), 8));
+
   dash.draw('tiles-own', tiles('자사'));
   dash.draw('tiles-rival', tiles('경쟁사'));
 
