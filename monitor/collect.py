@@ -12,7 +12,8 @@ import xml.etree.ElementTree as ET
 KST = timezone(timedelta(hours=9))
 NOW = datetime.now(KST)
 KEEP_DAYS = 45      # 기록 보관 기간
-WINDOW_H = 36       # 이번 실행에서 '최근'으로 보는 범위
+MONDAY = NOW.weekday() == 0  # 월~금만 돌므로 월요일엔 주말치까지 본다
+WINDOW_H = 84 if MONDAY else 36  # 이번 실행에서 '최근'으로 보는 범위(시간)
 UA = {"User-Agent": "Mozilla/5.0", "Accept-Language": "ko-KR,ko;q=0.9"}
 
 # 브랜드, 구분, 뉴스 검색어, 유튜브 검색어, 공식 유튜브 채널 ID(확인된 것만),
@@ -27,7 +28,7 @@ BRANDS = [
       "영화", "드라마", "할리우드", "가수", "별세", "사망", "nba", "nfl", "psg", "토트넘", "라이프치히",
       "데뷔전", "맹활약", "연승", "연패", "태클", "쿼터백", "골키퍼", "슈팅", "어시스트", "트레이드"]),
     ("N32", "자사", "N32", ["N32 침대", "N32 매트리스"], "UCcQQvh4I2LQBWPtPk0mUPmw", ["n32"], [], []),
-    ("몽클로스", "자사", "몽클로스 OR MONCLOS", ["몽클로스", "MONCLOS"], None, ["몽클로스", "monclos"], [], []),
+    ("몽클로스", "뷰티", "몽클로스 OR MONCLOS", ["몽클로스", "MONCLOS"], None, ["몽클로스", "monclos"], [], []),
     ("베스트슬립", "경쟁사", "베스트슬립", ["베스트슬립"], "UCOc_C-AP_16htnpXAMl6Kjw", ["베스트슬립", "bestsleep"], [], []),
     ("씰리", "경쟁사", "씰리", ["씰리침대"], "UCCn9ZfSzz2Q7Dg3j3zPuErA", ["씰리", "sealy"], [], []),
     ("템퍼", "경쟁사", "템퍼 OR TEMPUR", ["템퍼 매트리스"], "UCB347iopCDS6yPAWgP1xASQ", ["템퍼", "tempur"],
@@ -57,7 +58,7 @@ def get(url):
 
 
 def news(brand, group, q, rule):
-    q += " when:2d"
+    q += " when:4d" if MONDAY else " when:2d"
     url = "https://news.google.com/rss/search?" + urllib.parse.urlencode(
         {"q": q, "hl": "ko", "gl": "KR", "ceid": "KR:ko"})
     out = []
@@ -94,8 +95,9 @@ UNIT_H = {"초": 1 / 3600, "분": 1 / 60, "시간": 1, "일": 24, "주": 168, "�
 
 
 def yt_search(brand, group, query, rule, official):
-    # sp=EgQIAhAB : 업로드 날짜 '오늘' + 동영상만
-    page = get("https://www.youtube.com/results?" + urllib.parse.urlencode({"search_query": query, "sp": "EgQIAhAB"}))
+    # sp=EgQIAhAB : 업로드 '오늘' + 동영상만, EgQIAxAB : '이번 주' (월요일에 주말치 포함)
+    sp = "EgQIAxAB" if MONDAY else "EgQIAhAB"
+    page = get("https://www.youtube.com/results?" + urllib.parse.urlencode({"search_query": query, "sp": sp}))
     m = re.search(r"var ytInitialData = (\{.*?\});</script>", page)
     if not m:
         return []
@@ -112,6 +114,8 @@ def yt_search(brand, group, query, rule, official):
                 # 설명란 태그 도배 영상을 거르려고 제목·채널명에 브랜드가 있을 때만 남긴다
                 if rel and match(title + " " + owner.get("text", ""), *rule) and cid != official:
                     pub = NOW - timedelta(hours=int(rel.group(1)) * UNIT_H[rel.group(2)])
+                    if NOW - pub > timedelta(hours=WINDOW_H):
+                        return
                     out.append(row(brand, group, "유튜브", "언급", title, owner.get("text", ""),
                                    f"https://www.youtube.com/watch?v={v['videoId']}", pub))
                 return

@@ -1,29 +1,70 @@
 <meta name="dash-one-writer">
 <style>
-.bm{display:grid;gap:var(--cds-gap-xl);font-family:var(--font-anthropic-sans);color:var(--color-fg)}
+/* 색 역할: 자사 = 시리즈1, 경쟁사 = 시리즈2, 뷰티(몽클로스) = 시리즈3, 뉴스·유튜브 꼬리표 = 시리즈4·5 */
+.bm{display:grid;gap:var(--cds-gap-xl);font-family:var(--font-anthropic-sans);color:var(--color-fg);
+  --g-own:var(--cds-chart-1,#3b6fd8);--g-rival:var(--cds-chart-2,#d9822b);--g-beauty:var(--cds-chart-3,#b0479a);
+  --c-news:var(--cds-chart-4,#2f9e8f);--c-yt:var(--cds-chart-5,#c94a4a)}
 .bm h1{font-family:var(--font-anthropic-serif);font-weight:400;font-size:var(--cds-font-size-title);margin:0;text-wrap:balance}
-.bm h2{font-size:var(--cds-font-size-heading);font-weight:var(--cds-font-weight-medium);margin:0}
-.bm .lede{margin:var(--cds-gap-xs) 0 0;color:var(--color-fg-muted);max-width:68ch}
-.bm .lede b{color:var(--color-fg);font-weight:var(--cds-font-weight-medium)}
-.bm .note{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);margin:0}
-.bm-groups{display:grid;gap:var(--cds-gap-lg);grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
-.bm-group{display:grid;gap:var(--cds-gap-sm);align-content:start}
-.bm-group h3{margin:0;font-size:var(--cds-font-size-caption);letter-spacing:.06em;color:var(--color-fg-muted);font-weight:var(--cds-font-weight-medium)}
-.bm-tiles{display:grid;gap:var(--cds-gap-sm);grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
-.bm-tile{background:var(--color-panel);border:1px solid var(--color-border-line);border-radius:var(--cds-radius);padding:var(--cds-pad-md);display:grid;gap:2px;min-width:0}
+.bm h2{font-size:var(--cds-font-size-heading);font-weight:var(--cds-font-weight-medium);margin:0;text-wrap:balance}
+.bm h3{margin:0;font-size:var(--cds-font-size-caption);letter-spacing:.06em;color:var(--color-fg-muted);font-weight:var(--cds-font-weight-medium);display:flex;align-items:center;gap:6px}
+.bm .lede{margin:var(--cds-gap-xs) 0 0;max-width:70ch;font-size:1.05rem;line-height:1.6}
+.bm .lede b{font-weight:var(--cds-font-weight-medium)}
+.bm .lede .own{color:var(--g-own)} .bm .lede .rival{color:var(--g-rival)} .bm .lede .beauty{color:var(--g-beauty)}
+.bm .note{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);margin:0;max-width:75ch}
+.bm .sec{display:grid;gap:var(--cds-gap-sm)}
+.bm .legend{display:flex;flex-wrap:wrap;gap:var(--cds-gap-md);font-size:var(--cds-font-size-caption);color:var(--color-fg-muted)}
+.bm .dot{display:inline-block;width:10px;height:10px;border-radius:50%;flex:none}
+.bm .dot.own{background:var(--g-own)} .bm .dot.rival{background:var(--g-rival)} .bm .dot.beauty{background:var(--g-beauty)}
+
+.bm-groups{display:grid;gap:var(--cds-gap-lg);grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.bm-group{display:grid;gap:var(--cds-gap-sm);align-content:start;min-width:0}
+.bm-tiles{display:grid;gap:var(--cds-gap-sm);grid-template-columns:repeat(auto-fill,minmax(120px,1fr))}
+.bm-tile{--g:var(--g-own);background:color-mix(in srgb,var(--g) 9%,var(--color-panel));border:1px solid color-mix(in srgb,var(--g) 35%,var(--color-border-line));
+  border-radius:var(--cds-radius);padding:var(--cds-pad-md);display:grid;gap:2px;min-width:0;cursor:pointer;text-align:left;font:inherit;color:inherit}
+.bm-tile.rival{--g:var(--g-rival)} .bm-tile.beauty{--g:var(--g-beauty)}
+.bm-tile:hover{background:color-mix(in srgb,var(--g) 16%,var(--color-panel))}
+.bm-tile:focus-visible{outline:2px solid var(--g);outline-offset:2px}
 .bm-tile .name{font-weight:var(--cds-font-weight-medium)}
-.bm-tile .num{font-family:var(--font-anthropic-serif);font-size:2rem;line-height:1.1;font-variant-numeric:tabular-nums}
-.bm-tile .split{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);font-variant-numeric:tabular-nums}
+.bm-tile .num{font-family:var(--font-anthropic-serif);font-size:2.1rem;line-height:1.1;font-variant-numeric:tabular-nums;color:var(--g)}
 .bm-tile.zero .num{color:var(--color-fg-muted)}
+.bm-tile .split{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);font-variant-numeric:tabular-nums}
+
+.bm-chip{--g:var(--g-own);display:inline-flex;align-items:center;gap:5px;font-size:var(--cds-font-size-caption);padding:1px 8px;border-radius:999px;white-space:nowrap;
+  background:color-mix(in srgb,var(--g) 16%,transparent);color:var(--color-fg)}
+.bm-chip::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--g)}
+.bm-chip.rival{--g:var(--g-rival)} .bm-chip.beauty{--g:var(--g-beauty)}
+.bm-ch{font-size:11px;padding:0 6px;border-radius:4px;white-space:nowrap;border:1px solid currentColor;line-height:1.5}
+.bm-ch.news{color:var(--c-news)} .bm-ch.yt{color:var(--c-yt)}
+.bm-tag{font-size:11px;padding:0 6px;border-radius:4px;white-space:nowrap;background:var(--color-fg);color:var(--color-bg);line-height:1.6}
+.bm-new{font-size:11px;font-weight:var(--cds-font-weight-medium);color:var(--color-ok);white-space:nowrap}
+
+.bm-card{background:var(--color-panel);border:1px solid var(--color-border-line);border-radius:var(--cds-radius);padding:var(--cds-pad-lg);display:grid;gap:var(--cds-gap-sm);align-content:start;min-width:0}
+.bm-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.bm-list li{line-height:1.5;min-width:0;overflow-wrap:anywhere;display:flex;flex-wrap:wrap;gap:4px 6px;align-items:baseline}
+.bm-list a{color:var(--color-fg);text-decoration:none}
+.bm-list a:hover,.bm-list a:focus-visible{text-decoration:underline}
+.bm .src{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted)}
+.bm-empty{color:var(--color-fg-muted)}
+
+.bm-events{display:grid;gap:var(--cds-gap-md);grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.bm-event{--g:var(--g-own);background:var(--color-panel);border:1px solid color-mix(in srgb,var(--g) 30%,var(--color-border-line));border-radius:var(--cds-radius);padding:var(--cds-pad-md);display:grid;gap:var(--cds-gap-sm);align-content:start;min-width:0}
+.bm-event.rival{--g:var(--g-rival)} .bm-event.beauty{--g:var(--g-beauty)}
+.bm-event .head{display:flex;gap:var(--cds-gap-xs);align-items:center}
+
+.bm-beauty{border-color:color-mix(in srgb,var(--g-beauty) 40%,var(--color-border-line));background:color-mix(in srgb,var(--g-beauty) 5%,var(--color-panel))}
+.bm-beauty-top{display:flex;flex-wrap:wrap;gap:var(--cds-gap-lg);align-items:flex-start}
+.bm-beauty-top .bm-tile{min-width:140px}
+.bm-beauty-top .bm-list{flex:1 1 320px;min-width:0}
+
 .bm-heat-wrap{overflow-x:auto}
-.bm-heat{border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:var(--cds-font-size-caption)}
+.bm-heat{border-collapse:separate;border-spacing:3px;font-variant-numeric:tabular-nums;font-size:var(--cds-font-size-caption)}
 .bm-heat th,.bm-heat td{padding:6px 8px;text-align:center;white-space:nowrap}
 .bm-heat th{font-weight:400;color:var(--cds-text-secondary)}
 .bm-heat th.b{text-align:left;color:var(--color-fg);font-weight:var(--cds-font-weight-medium)}
 .bm-heat td{border-radius:4px;min-width:34px}
+
 .bm-filters{display:flex;flex-wrap:wrap;gap:var(--cds-gap-sm);align-items:center}
 .bm-filters input{font:inherit;padding:6px 10px;border:1px solid var(--color-border-line);border-radius:var(--cds-radius);background:var(--color-bg);color:var(--color-fg);min-width:0;flex:1 1 160px}
-.bm-count{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted)}
 .bm-feed-wrap{overflow-x:auto;min-height:200px}
 .bm-feed{width:100%;border-collapse:collapse}
 .bm-feed th{text-align:left;font-size:var(--cds-font-size-caption);color:var(--cds-text-secondary);font-weight:400;padding:6px 8px;border-bottom:1px solid var(--color-border-line);white-space:nowrap}
@@ -32,61 +73,73 @@
 .bm-feed td.w{white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--color-fg-muted);font-size:var(--cds-font-size-caption)}
 .bm-feed a{color:var(--color-fg);text-decoration:none}
 .bm-feed a:hover,.bm-feed a:focus-visible{text-decoration:underline}
-.bm-chip{display:inline-block;font-size:var(--cds-font-size-caption);padding:1px 8px;border-radius:999px;border:1px solid var(--color-border-line);white-space:nowrap}
-.bm-chip.own{border-color:transparent;background:var(--color-fg);color:var(--color-bg)}
-.bm-chip.new{border-color:var(--color-ok);color:var(--color-ok)}
-.bm-empty{color:var(--color-fg-muted);padding:var(--cds-pad-lg) 0}
-.bm-list{list-style:none;margin:0;padding:0;display:grid;gap:var(--cds-gap-sm)}
-.bm-list li{line-height:1.5;min-width:0;overflow-wrap:anywhere}
-.bm-list a{color:var(--color-fg);text-decoration:none}
-.bm-list a:hover,.bm-list a:focus-visible{text-decoration:underline}
-.bm-list .src{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted)}
-.bm-list .bm-empty{padding:0}
+.bm-feed .t-in{display:flex;flex-wrap:wrap;gap:4px 6px;align-items:baseline}
 </style>
 
 <div class="bm">
-  <header id="top">
+  <header id="top" class="sec">
     <h1>침대 브랜드 데일리 모니터</h1>
-    <p class="lede" data-draw="lede">—</p>
-    <p class="note">뉴스는 Google 뉴스, 유튜브는 공식 채널 새 영상과 브랜드명이 제목·채널명에 들어간 오늘 업로드 영상을 매일 오전 9시(한국시간) 전에 모읍니다. 인스타그램은 로그인 없이 수집할 수 없어 아직 빠져 있습니다.</p>
+    <p class="lede" data-draw="lede" data-source="by_group">—</p>
+    <div class="legend">
+      <span style="display:flex;align-items:center;gap:6px"><span class="dot own"></span>자사 침대 (시몬스·N32)</span>
+      <span style="display:flex;align-items:center;gap:6px"><span class="dot rival"></span>경쟁사 (베스트슬립·씰리·템퍼·에이스·코웨이)</span>
+      <span style="display:flex;align-items:center;gap:6px"><span class="dot beauty"></span>몽클로스 (뷰티, 따로 집계)</span>
+    </div>
+    <p class="note">뉴스는 Google 뉴스, 유튜브는 공식 채널 새 영상과 브랜드명이 제목·채널명에 들어간 오늘 업로드 영상을 매일 오전 9시(한국시간) 전에 모읍니다. 카드를 누르면 아래 목록이 그 브랜드 글로 바뀝니다.</p>
   </header>
 
   <section id="today" class="bm-groups">
     <div class="bm-group">
-      <h3>자사 · 최근 수집분</h3>
+      <h3><span class="dot own"></span>자사 침대 · 최근 수집분</h3>
       <div class="bm-tiles" data-draw="tiles-own" data-source="by_brand"></div>
     </div>
-    <div class="bm-group">
-      <h3>경쟁사 · 최근 수집분</h3>
+    <div class="bm-group" style="grid-column:span 2">
+      <h3><span class="dot rival"></span>경쟁사 · 최근 수집분</h3>
       <div class="bm-tiles" data-draw="tiles-rival" data-source="by_brand"></div>
     </div>
   </section>
 
   <section id="brief" class="bm-groups">
-    <div class="bm-group">
-      <h2>오늘 요약 · 주요 글</h2>
-      <p class="note">최근 수집분에서 자사 글을 먼저, 그다음 경쟁사 글을 최신순으로 6개까지 보여 줍니다.</p>
+    <div class="bm-card">
+      <h2>오늘의 주요 글</h2>
+      <p class="note">침대 브랜드만. 자사 글을 먼저, 그다음 경쟁사 글을 최신순으로 6개까지.</p>
       <ul class="bm-list" data-draw="brief-top" data-source="items"></ul>
     </div>
-    <div class="bm-group">
+    <div class="bm-card">
       <h2>유튜브 새 영상</h2>
-      <p class="note">공식 채널 새 영상과, 제목·채널명에 브랜드가 들어간 오늘 업로드 영상입니다.</p>
+      <p class="note">침대 브랜드 공식 채널 새 영상과, 제목·채널명에 브랜드가 들어간 오늘 업로드 영상.</p>
       <ul class="bm-list" data-draw="brief-yt" data-source="items"></ul>
-    </div>
-    <div class="bm-group">
-      <h2>인스타그램</h2>
-      <p class="note">아직 수집하지 않습니다. 인스타그램은 로그인 없이 게시물을 읽을 수 없어서, 회사 인스타그램 비즈니스 계정을 Meta 개발자 앱에 연결해야 공식 계정 새 게시물을 가져올 수 있습니다.</p>
     </div>
   </section>
 
-  <section id="daily" style="display:grid;gap:var(--cds-gap-sm)">
+  <section id="events" class="sec">
+    <h2>행사·프로모션 (최근 7일)</h2>
+    <p class="note">제목에 팝업·프로모션·할인·이벤트·콘서트·협찬·전시·체험·오픈 같은 말이 들어간 침대 브랜드 글입니다. 검은 꼬리표가 제목에서 찾은 행사 종류입니다.</p>
+    <div class="bm-events" data-draw="events" data-source="items"></div>
+  </section>
+
+  <section id="beauty" class="bm-card bm-beauty">
+    <h2 style="display:flex;align-items:center;gap:8px"><span class="dot beauty"></span>몽클로스 (뷰티)</h2>
+    <p class="note">뷰티 브랜드라 침대 브랜드 집계와 목록에서 빼고 여기에만 모읍니다. 최근 7일 글입니다.</p>
+    <div class="bm-beauty-top">
+      <div data-draw="tile-beauty" data-source="by_brand"></div>
+      <ul class="bm-list" data-draw="beauty-list" data-source="items"></ul>
+    </div>
+  </section>
+
+  <section id="insta" class="bm-card">
+    <h2>인스타그램</h2>
+    <p class="note">아직 수집하지 않습니다. 로그인 없이는 게시물을 읽을 수 없어서, 인스타그램 프로페셔널 계정(개인 계정을 크리에이터로 바꿔도 됨)과 Meta 개발자 앱을 연결하면 브랜드 공식 계정의 새 게시물 링크·본문·댓글 수를 여기에 보여 줄 수 있습니다.</p>
+  </section>
+
+  <section id="daily" class="sec">
     <h2>날짜별 새 글 수</h2>
-    <p class="note">칸이 진할수록 그날 새로 잡힌 글이 많습니다. 기록은 최근 45일까지 보관합니다.</p>
+    <p class="note">칸이 진할수록 그날 새로 잡힌 글이 많습니다. 행 색은 자사·경쟁사·뷰티 구분입니다. 기록은 최근 45일까지 보관합니다.</p>
     <div class="bm-heat-wrap" data-draw="heat" data-source="daily"></div>
   </section>
 
-  <section id="feed" style="display:grid;gap:var(--cds-gap-md)">
-    <h2>새 글 목록</h2>
+  <section id="feed" class="sec" style="gap:var(--cds-gap-md)">
+    <h2>전체 목록</h2>
     <div class="bm-filters">
       <select class="dash-select" id="f-brand" aria-label="브랜드" data-draw="f-brand" data-source="items"></select>
       <select class="dash-select" id="f-channel" aria-label="채널">
@@ -97,7 +150,7 @@
       <select class="dash-select" id="f-day" aria-label="수집일" data-draw="f-day" data-source="items"></select>
       <input id="f-q" type="search" placeholder="제목·출처 검색" aria-label="제목·출처 검색">
     </div>
-    <p class="bm-count" data-draw="feed-count">—</p>
+    <p class="src" data-draw="feed-count">—</p>
     <div class="bm-feed-wrap">
       <table class="bm-feed" data-source="items" data-row-key="링크">
         <thead><tr>
@@ -114,24 +167,36 @@
 </div>
 
 <script>
-window.BM = { brand: '', channel: '', day: '', q: '' };
-window.BM_ORDER = ['시몬스', 'N32', '몽클로스', '베스트슬립', '씰리', '템퍼', '에이스', '코웨이'];
+window.BM = { brand: '@침대', channel: '', day: '', q: '' };
+window.BM_GROUP = { '시몬스': '자사', 'N32': '자사', '몽클로스': '뷰티', '베스트슬립': '경쟁사', '씰리': '경쟁사', '템퍼': '경쟁사', '에이스': '경쟁사', '코웨이': '경쟁사' };
+window.BM_CLS = { '자사': 'own', '경쟁사': 'rival', '뷰티': 'beauty' };
+window.BM_ORDER = ['시몬스', 'N32', '베스트슬립', '씰리', '템퍼', '에이스', '코웨이', '몽클로스'];
 
 dash.calc('by_brand', {
   title: '브랜드별 최근 수집분',
-  description: '가장 최근 수집일에 새로 잡힌 글을 브랜드·채널별로 센 값',
+  description: '가장 최근 수집일에 새로 잡힌 글을 브랜드·채널별로 센 값. 몽클로스는 뷰티로 따로 구분',
   inputs: ['items'],
   fn: (items) => {
     const last = items.reduce((m, r) => (r['수집일'] > m ? r['수집일'] : m), '');
-    const order = ['시몬스', 'N32', '몽클로스', '베스트슬립', '씰리', '템퍼', '에이스', '코웨이'];
-    const own = new Set(['시몬스', 'N32', '몽클로스']);
-    return order.map((b) => {
+    const group = { '시몬스': '자사', 'N32': '자사', '몽클로스': '뷰티', '베스트슬립': '경쟁사', '씰리': '경쟁사', '템퍼': '경쟁사', '에이스': '경쟁사', '코웨이': '경쟁사' };
+    return Object.keys(group).map((b) => {
       const rs = items.filter((r) => r['브랜드'] === b && r['수집일'] === last);
       const n = rs.filter((r) => r['채널'] === '뉴스').length;
       const y = rs.filter((r) => r['채널'] === '유튜브').length;
-      return { 브랜드: b, 구분: own.has(b) ? '자사' : '경쟁사', 수집일: last, 뉴스: n, 유튜브: y, 합계: n + y };
+      return { 브랜드: b, 구분: group[b], 수집일: last, 뉴스: n, 유튜브: y, 합계: n + y };
     });
   },
+});
+
+dash.calc('by_group', {
+  title: '구분별 최근 수집분',
+  description: '가장 최근 수집일의 새 글 수를 자사 침대·경쟁사·뷰티(몽클로스)로 묶은 값',
+  inputs: ['by_brand'],
+  fn: (byBrand) => ['자사', '경쟁사', '뷰티'].map((g) => ({
+    구분: g,
+    수집일: byBrand.length ? byBrand[0]['수집일'] : '',
+    합계: byBrand.filter((r) => r['구분'] === g).reduce((s, r) => s + r['합계'], 0),
+  })),
 });
 
 dash.calc('daily', {
@@ -152,97 +217,153 @@ dash.calc('daily', {
 <script>
 (function () {
   const md = (d) => { const [, m, day] = d.split('-'); return (+m) + '/' + (+day); };
+  const grp = (b) => BM_GROUP[b] || '경쟁사';
+  const cls = (b) => BM_CLS[grp(b)];
+  const byTime = (a, b) => (a['게시시각'] < b['게시시각'] ? 1 : -1);
+  const isBed = (r) => grp(r['브랜드']) !== '뷰티';
+  const EVENT_RE = /팝업|프로모션|할인|이벤트|행사|콘서트|협찬|전시|체험|오픈|기획전|세일|블랙프라이데이|페스티벌|캠페인|사은|증정|공연|클래스|북클럽|입점/g;
+  const lastDay = (rows) => rows.reduce((m, r) => (r['수집일'] > m ? r['수집일'] : m), '');
+  const recentDays = (rows, n) => [...new Set(rows.map((r) => r['수집일']))].sort().slice(-n);
+
+  function chip(b) { const s = document.createElement('span'); s.className = 'bm-chip ' + cls(b); s.textContent = b; return s; }
+  function chTag(r) { const s = document.createElement('span'); s.className = 'bm-ch ' + (r['채널'] === '유튜브' ? 'yt' : 'news'); s.textContent = r['채널'] === '유튜브' ? '유튜브' + (r['유형'] === '공식' ? ' 공식' : '') : '뉴스'; return s; }
+  function evTags(title) { return [...new Set(title.match(EVENT_RE) || [])].slice(0, 2).map((t) => { const s = document.createElement('span'); s.className = 'bm-tag'; s.textContent = t; return s; }); }
+  function link(r) { const a = document.createElement('a'); a.href = r['링크']; a.target = '_blank'; a.rel = 'noopener'; a.textContent = r['제목']; return a; }
+  function src(text) { const s = document.createElement('span'); s.className = 'src'; s.textContent = text; return s; }
+  function itemLi(r, opts) {
+    const li = document.createElement('li');
+    if (opts.chip) li.append(chip(r['브랜드']));
+    li.append(chTag(r), ...evTags(r['제목']), link(r), src(r['출처'] + ' · ' + md(r['게시시각'].slice(0, 10))));
+    return li;
+  }
+  function emptyLi(ul, text) { const li = document.createElement('li'); li.className = 'bm-empty'; li.textContent = text; ul.append(li); }
+  function setFeed(brand, day) { BM.brand = brand; BM.day = day; dash.draw('f-brand'); dash.draw('f-day'); dash.draw('feed-rows'); dash.draw('feed-count'); }
 
   dash.draw('lede', (el) => {
-    const g = dash.data('by_brand');
+    const g = dash.data('by_group');
+    const bb = dash.data('by_brand');
     el.replaceChildren();
     if (g.status !== 'ok' || !g.data.length) { el.textContent = '—'; return; }
-    const rows = g.data;
-    const sum = (k) => rows.filter((r) => r['구분'] === k).reduce((s, r) => s + r['합계'], 0);
-    const top = rows.slice().sort((a, b) => b['합계'] - a['합계'])[0];
-    const add = (t, strong) => { const n = document.createElement(strong ? 'b' : 'span'); n.textContent = t; el.append(n); };
-    add(md(rows[0]['수집일']) + ' 수집분은 자사 ');
-    add(sum('자사') + '건', true);
-    add(', 경쟁사 ');
-    add(sum('경쟁사') + '건', true);
-    add('입니다.');
-    if (top && top['합계'] > 0) { add(' 가장 많이 나온 곳은 '); add(top['브랜드'] + ' ' + top['합계'] + '건', true); add('이에요.'); }
+    const add = (t, c) => { const n = document.createElement(c ? 'b' : 'span'); n.textContent = t; if (c) n.className = c; el.append(n); return n; };
+    const mark = (n, grpName) => Object.assign(n.dataset, { source: 'by_group', field: '합계', where: '구분=' + encodeURIComponent(grpName) });
+    const v = (k) => g.data.find((r) => r['구분'] === k)['합계'];
+    add(md(g.data[0]['수집일']) + ' 수집분은 자사 침대 ');
+    mark(add(String(v('자사')), 'own'), '자사'); add('건, 경쟁사 ');
+    mark(add(String(v('경쟁사')), 'rival'), '경쟁사'); add('건, 몽클로스(뷰티) ');
+    mark(add(String(v('뷰티')), 'beauty'), '뷰티'); add('건입니다.');
+    if (bb.status === 'ok') {
+      const top = bb.data.filter((r) => r['구분'] !== '뷰티').sort((a, b) => b['합계'] - a['합계'])[0];
+      if (top && top['합계'] > 0) { add(' 침대 브랜드 중 가장 많이 나온 곳은 '); add(top['브랜드'] + ' ' + top['합계'] + '건', cls(top['브랜드'])); add('이에요.'); }
+    }
   });
 
+  function tile(r) {
+    const c = cls(r['브랜드']);
+    const t = document.createElement('button');
+    t.type = 'button';
+    t.className = 'bm-tile ' + c + (r['합계'] ? '' : ' zero');
+    t.id = 'tile-' + r['브랜드'];
+    t.setAttribute('aria-label', r['브랜드'] + ' 글만 목록에서 보기');
+    const w = '브랜드=' + encodeURIComponent(r['브랜드']);
+    const name = document.createElement('span'); name.className = 'name'; name.textContent = r['브랜드'];
+    const num = document.createElement('span'); num.className = 'num';
+    Object.assign(num.dataset, { source: 'by_brand', field: '합계', where: w }); num.textContent = r['합계'];
+    const split = document.createElement('span'); split.className = 'split';
+    const a = document.createElement('span'); Object.assign(a.dataset, { source: 'by_brand', field: '뉴스', where: w }); a.textContent = r['뉴스'];
+    const b = document.createElement('span'); Object.assign(b.dataset, { source: 'by_brand', field: '유튜브', where: w }); b.textContent = r['유튜브'];
+    split.append('뉴스 ', a, ' · 유튜브 ', b);
+    t.append(name, num, split);
+    t.onclick = () => { setFeed(r['브랜드'], r['수집일']); for (const f of document.querySelectorAll('#feed')) f.scrollIntoView({ behavior: 'smooth', block: 'start' }); };
+    return t;
+  }
   function tiles(group) {
     return (el) => {
       const g = dash.data('by_brand');
       el.replaceChildren();
       if (g.status !== 'ok') { el.textContent = '—'; return; }
-      for (const r of g.data.filter((x) => x['구분'] === group)) {
-        const t = document.createElement('div');
-        t.className = 'bm-tile' + (r['합계'] ? '' : ' zero');
-        t.id = 'tile-' + r['브랜드'];
-        const w = '브랜드=' + encodeURIComponent(r['브랜드']);
-        const name = document.createElement('div'); name.className = 'name'; name.textContent = r['브랜드'];
-        const num = document.createElement('div'); num.className = 'num';
-        Object.assign(num.dataset, { source: 'by_brand', field: '합계', where: w }); num.textContent = r['합계'];
-        const split = document.createElement('div'); split.className = 'split';
-        const a = document.createElement('span'); Object.assign(a.dataset, { source: 'by_brand', field: '뉴스', where: w }); a.textContent = r['뉴스'];
-        const b = document.createElement('span'); Object.assign(b.dataset, { source: 'by_brand', field: '유튜브', where: w }); b.textContent = r['유튜브'];
-        split.append('뉴스 ', a, ' · 유튜브 ', b);
-        t.append(name, num, split);
-        t.style.cursor = 'pointer';
-        t.tabIndex = 0;
-        t.title = r['브랜드'] + ' 글만 보기';
-        const pick = () => { BM.brand = r['브랜드']; BM.day = r['수집일']; dash.draw('f-brand'); dash.draw('f-day'); dash.draw('feed-rows'); dash.draw('feed-count'); };
-        t.onclick = pick;
-        t.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } };
-        el.append(t);
-      }
+      for (const r of g.data.filter((x) => x['구분'] === group)) el.append(tile(r));
     };
   }
-  function briefList(pick, limit) {
+  dash.draw('tiles-own', tiles('자사'));
+  dash.draw('tiles-rival', tiles('경쟁사'));
+  dash.draw('tile-beauty', tiles('뷰티'));
+
+  function briefList(pick, limit, emptyText) {
     return (ul) => {
       const g = dash.data('items');
       ul.replaceChildren();
-      if (g.status !== 'ok') { const li = document.createElement('li'); li.textContent = '—'; ul.append(li); return; }
-      const last = g.data.reduce((m, r) => (r['수집일'] > m ? r['수집일'] : m), '');
-      const rows = pick(g.data.filter((r) => r['수집일'] === last)).slice(0, limit);
-      if (!rows.length) { const li = document.createElement('li'); li.className = 'bm-empty'; li.textContent = '최근 수집분에 해당 글이 없습니다.'; ul.append(li); return; }
-      for (const r of rows) {
-        const li = document.createElement('li');
-        const chip = document.createElement('span'); chip.className = 'bm-chip' + (r['구분'] === '자사' ? ' own' : ''); chip.textContent = r['브랜드'];
-        const a = document.createElement('a'); a.href = r['링크']; a.target = '_blank'; a.rel = 'noopener'; a.textContent = r['제목'];
-        const src = document.createElement('span'); src.className = 'src'; src.textContent = r['출처'] + (r['채널'] === '유튜브' ? ' · ' + r['유형'] : '');
-        li.append(chip, ' ', a, ' ', src);
-        ul.append(li);
-      }
+      if (g.status !== 'ok') { emptyLi(ul, '—'); return; }
+      const last = lastDay(g.data);
+      const rows = pick(g.data.filter((r) => r['수집일'] === last && isBed(r))).slice(0, limit);
+      if (!rows.length) { emptyLi(ul, emptyText); return; }
+      for (const r of rows) ul.append(itemLi(r, { chip: true }));
     };
   }
-  const byTime = (a, b) => (a['게시시각'] < b['게시시각'] ? 1 : -1);
-  dash.draw('brief-top', briefList((rs) => [...rs.filter((r) => r['구분'] === '자사').sort(byTime), ...rs.filter((r) => r['구분'] !== '자사').sort(byTime)], 6));
-  dash.draw('brief-yt', briefList((rs) => rs.filter((r) => r['채널'] === '유튜브').sort(byTime), 8));
+  dash.draw('brief-top', briefList((rs) => [...rs.filter((r) => grp(r['브랜드']) === '자사').sort(byTime), ...rs.filter((r) => grp(r['브랜드']) === '경쟁사').sort(byTime)], 6, '최근 수집분에 침대 브랜드 글이 없습니다.'));
+  dash.draw('brief-yt', briefList((rs) => rs.filter((r) => r['채널'] === '유튜브').sort(byTime), 8, '최근 수집분에 유튜브 새 영상이 없습니다.'));
 
-  dash.draw('tiles-own', tiles('자사'));
-  dash.draw('tiles-rival', tiles('경쟁사'));
+  dash.draw('events', (el) => {
+    const g = dash.data('items');
+    el.replaceChildren();
+    if (g.status !== 'ok') { el.textContent = '—'; return; }
+    const days = recentDays(g.data, 7);
+    const rows = g.data.filter((r) => isBed(r) && days.includes(r['수집일']) && new RegExp(EVENT_RE.source).test(r['제목'])).sort(byTime);
+    if (!rows.length) { const p = document.createElement('p'); p.className = 'bm-empty'; p.textContent = '최근 7일 동안 침대 브랜드의 행사·프로모션 글이 없습니다.'; el.append(p); return; }
+    for (const b of BM_ORDER) {
+      const rs = rows.filter((r) => r['브랜드'] === b);
+      if (!rs.length) continue;
+      const box = document.createElement('div'); box.className = 'bm-event ' + cls(b); box.id = 'event-' + b;
+      const h = document.createElement('div'); h.className = 'head';
+      h.append(chip(b), src(rs.length + '건'));
+      const ul = document.createElement('ul'); ul.className = 'bm-list';
+      for (const r of rs.slice(0, 5)) ul.append(itemLi(r, { chip: false }));
+      if (rs.length > 5) emptyLi(ul, '외 ' + (rs.length - 5) + '건은 전체 목록에서 볼 수 있습니다.');
+      box.append(h, ul); el.append(box);
+    }
+  });
+
+  dash.draw('beauty-list', (ul) => {
+    const g = dash.data('items');
+    ul.replaceChildren();
+    if (g.status !== 'ok') { emptyLi(ul, '—'); return; }
+    const days = recentDays(g.data, 7);
+    const rows = g.data.filter((r) => !isBed(r) && days.includes(r['수집일'])).sort(byTime);
+    if (!rows.length) { emptyLi(ul, '최근 7일 동안 몽클로스 글이 없습니다.'); return; }
+    for (const r of rows.slice(0, 8)) ul.append(itemLi(r, { chip: false }));
+    if (rows.length > 8) {
+      const li = document.createElement('li');
+      const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'src';
+      btn.style.cssText = 'background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;font:inherit';
+      btn.textContent = '몽클로스 글 ' + rows.length + '건 모두 전체 목록에서 보기';
+      btn.onclick = () => { setFeed('몽클로스', ''); for (const f of document.querySelectorAll('#feed')) f.scrollIntoView({ behavior: 'smooth', block: 'start' }); };
+      li.append(btn); ul.append(li);
+    }
+  });
 
   dash.draw('heat', (el) => {
     const g = dash.data('daily');
     el.replaceChildren();
     if (g.status !== 'ok') { el.textContent = g.status === 'error' ? '불러오지 못했습니다' : '—'; return; }
     const days = [...new Set(g.data.map((r) => r['수집일']))].sort().slice(-14);
-    const max = Math.max(1, ...g.data.map((r) => r['건수']));
+    const max = Math.max(1, ...g.data.filter((r) => grp(r['브랜드']) !== '뷰티').map((r) => r['건수']));
     const t = document.createElement('table'); t.className = 'bm-heat';
     const hr = t.insertRow(); hr.append(document.createElement('th'));
     for (const d of days) { const th = document.createElement('th'); th.textContent = md(d); hr.append(th); }
+    const col = { 자사: 'var(--g-own)', 경쟁사: 'var(--g-rival)', 뷰티: 'var(--g-beauty)' };
     for (const b of BM_ORDER) {
       const tr = t.insertRow();
-      const th = document.createElement('th'); th.className = 'b'; th.textContent = b; tr.append(th);
+      const th = document.createElement('th'); th.className = 'b'; th.append(chip(b)); tr.append(th);
+      if (grp(b) === '뷰티') tr.style.borderTop = '1px solid var(--color-border-line)';
       for (const d of days) {
         const r = g.data.find((x) => x['브랜드'] === b && x['수집일'] === d);
         const td = tr.insertCell();
         const n = r ? r['건수'] : 0;
         td.textContent = n || '·';
         if (r) Object.assign(td.dataset, { source: 'daily', field: '건수', where: '브랜드=' + encodeURIComponent(b) + '&수집일=' + d });
-        const k = n / max;
-        td.style.background = n ? `color-mix(in srgb, ${dash.colors[0]} ${Math.round(15 + 70 * k)}%, transparent)` : 'transparent';
-        td.style.color = k > 0.55 ? 'var(--color-bg)' : (n ? 'var(--color-fg)' : 'var(--color-fg-muted)');
+        const k = Math.min(1, n / max);
+        td.style.background = n ? `color-mix(in srgb, ${col[grp(b)]} ${Math.round(18 + 62 * k)}%, transparent)` : 'transparent';
+        td.style.color = n ? 'var(--color-fg)' : 'var(--color-fg-muted)';
+        td.style.fontWeight = k > 0.5 ? '600' : '400';
       }
     }
     el.append(t);
@@ -251,8 +372,9 @@ dash.calc('daily', {
   dash.draw('f-brand', (sel) => {
     const g = dash.data('items');
     const have = g.status === 'ok' ? new Set(g.data.map((r) => r['브랜드'])) : new Set();
-    sel.replaceChildren(new Option('브랜드 전체', ''), new Option('자사만', '@자사'), new Option('경쟁사만', '@경쟁사'),
-      ...BM_ORDER.filter((b) => have.has(b)).map((b) => new Option(b, b)));
+    const bed = BM_ORDER.filter((b) => grp(b) !== '뷰티' && have.has(b)).map((b) => new Option(b, b));
+    sel.replaceChildren(new Option('침대 브랜드 전체', '@침대'), new Option('자사 침대 (시몬스·N32)', '@자사'), new Option('경쟁사만', '@경쟁사'),
+      ...bed, new Option('몽클로스 (뷰티)', '몽클로스'), new Option('뷰티 포함 전체', ''));
     sel.value = BM.brand;
     sel.onchange = () => { BM.brand = sel.value; dash.draw('feed-rows'); dash.draw('feed-count'); };
   });
@@ -271,8 +393,13 @@ dash.calc('daily', {
   window.BM_filtered = function () {
     const g = dash.data('items');
     if (g.status !== 'ok') return null;
-    return g.data.filter((r) =>
-      (!BM.brand || (BM.brand[0] === '@' ? r['구분'] === BM.brand.slice(1) : r['브랜드'] === BM.brand)) &&
+    const okBrand = (r) => {
+      if (BM.brand === '') return true;
+      if (BM.brand === '@침대') return isBed(r);
+      if (BM.brand[0] === '@') return grp(r['브랜드']) === BM.brand.slice(1);
+      return r['브랜드'] === BM.brand;
+    };
+    return g.data.filter((r) => okBrand(r) &&
       (!BM.channel || r['채널'] === BM.channel) &&
       (!BM.day || r['수집일'] === BM.day) &&
       (!BM.q || (r['제목'] + ' ' + r['출처']).toLowerCase().includes(BM.q)));
@@ -287,34 +414,24 @@ dash.calc('daily', {
     const g = dash.data('items');
     tb.replaceChildren();
     const rows = BM_filtered();
-    if (!rows) {
-      const td = tb.insertRow().insertCell(); td.colSpan = 5; td.className = 'bm-empty';
-      td.textContent = g.status === 'error' ? '목록을 불러오지 못했습니다.' : '불러오는 중…';
-      return;
-    }
-    if (!rows.length) {
-      const td = tb.insertRow().insertCell(); td.colSpan = 5; td.className = 'bm-empty';
-      td.textContent = '조건에 맞는 글이 없습니다. 필터를 넓혀 보세요.';
-      return;
-    }
-    const last = g.data.reduce((m, r) => (r['수집일'] > m ? r['수집일'] : m), '');
+    const msg = (text) => { const td = tb.insertRow().insertCell(); td.colSpan = 5; td.className = 'bm-empty'; td.style.padding = 'var(--cds-pad-lg) 8px'; td.textContent = text; };
+    if (!rows) { msg(g.status === 'error' ? '목록을 불러오지 못했습니다.' : '불러오는 중…'); return; }
+    if (!rows.length) { msg('조건에 맞는 글이 없습니다. 필터를 넓혀 보세요.'); return; }
+    const last = lastDay(g.data);
     for (const r of rows.slice(0, 300)) {
       const tr = tb.insertRow();
       tr.dataset.key = encodeURIComponent(r['링크']);
-      const c1 = tr.insertCell(); const chip = document.createElement('span');
-      chip.className = 'bm-chip' + (r['구분'] === '자사' ? ' own' : ''); chip.textContent = r['브랜드']; c1.append(chip);
-      const c2 = tr.insertCell(); c2.className = 'w'; c2.textContent = r['채널'] + ' · ' + r['유형'];
+      tr.insertCell().append(chip(r['브랜드']));
+      tr.insertCell().append(chTag(r));
       const c3 = tr.insertCell(); c3.className = 't';
-      const a = document.createElement('a'); a.href = r['링크']; a.target = '_blank'; a.rel = 'noopener'; a.textContent = r['제목'];
-      c3.append(a);
-      if (r['수집일'] === last) { const n = document.createElement('span'); n.className = 'bm-chip new'; n.textContent = '새 글'; n.style.marginLeft = '6px'; c3.append(n); }
+      const box = document.createElement('div'); box.className = 't-in';
+      box.append(...evTags(r['제목']), link(r));
+      if (r['수집일'] === last) { const n = document.createElement('span'); n.className = 'bm-new'; n.textContent = '새 글'; box.append(n); }
+      c3.append(box);
       const c4 = tr.insertCell(); c4.className = 'w'; c4.textContent = r['출처'];
       const c5 = tr.insertCell(); c5.className = 'w'; c5.textContent = r['게시시각'];
     }
-    if (rows.length > 300) {
-      const td = tb.insertRow().insertCell(); td.colSpan = 5; td.className = 'bm-empty';
-      td.textContent = '앞의 300건만 보여 줍니다. 필터로 좁혀 보세요.';
-    }
+    if (rows.length > 300) msg('앞의 300건만 보여 줍니다. 필터로 좁혀 보세요.');
   });
 })();
 </script>
