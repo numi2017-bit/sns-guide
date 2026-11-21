@@ -34,7 +34,7 @@
 .bm-chip::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--g)}
 .bm-chip.rival{--g:var(--g-rival)} .bm-chip.beauty{--g:var(--g-beauty)}
 .bm-ch{font-size:11px;padding:0 6px;border-radius:4px;white-space:nowrap;border:1px solid currentColor;line-height:1.5}
-.bm-ch.news{color:var(--c-news)} .bm-ch.yt{color:var(--c-yt)}
+.bm-ch.news{color:var(--c-news)} .bm-ch.yt{color:var(--c-yt)} .bm-ch.ad{color:var(--g-beauty)}
 .bm-tag{font-size:11px;padding:0 6px;border-radius:4px;white-space:nowrap;background:var(--color-fg);color:var(--color-bg);line-height:1.6}
 .bm-new{font-size:11px;font-weight:var(--cds-font-weight-medium);color:var(--color-ok);white-space:nowrap}
 
@@ -128,8 +128,9 @@
   </section>
 
   <section id="insta" class="bm-card">
-    <h2>인스타그램</h2>
-    <p class="note">아직 수집하지 않습니다. 로그인 없이는 게시물을 읽을 수 없어서, 인스타그램 프로페셔널 계정(개인 계정을 크리에이터로 바꿔도 됨)과 Meta 개발자 앱을 연결하면 브랜드 공식 계정의 새 게시물 링크·본문·댓글 수를 여기에 보여 줄 수 있습니다.</p>
+    <h2>인스타그램·페이스북 광고 (최근 14일 새로 시작)</h2>
+    <p class="note">Meta 광고 라이브러리에서 브랜드 공식 페이지가 새로 시작한 광고입니다(대리점 광고는 뺐습니다). 광고 없이 올린 일반 게시물과 댓글은 여기 나오지 않습니다. 링크를 누르면 광고 원문이 열립니다.</p>
+    <ul class="bm-list" data-draw="ads-list" data-source="items"></ul>
   </section>
 
   <section id="daily" class="sec">
@@ -146,6 +147,7 @@
         <option value="">뉴스·유튜브 전체</option>
         <option value="뉴스">뉴스</option>
         <option value="유튜브">유튜브</option>
+        <option value="SNS 광고">인스타·페북 광고</option>
       </select>
       <select class="dash-select" id="f-day" aria-label="수집일" data-draw="f-day" data-source="items"></select>
       <input id="f-q" type="search" placeholder="제목·출처 검색" aria-label="제목·출처 검색">
@@ -183,7 +185,8 @@ dash.calc('by_brand', {
       const rs = items.filter((r) => r['브랜드'] === b && r['수집일'] === last);
       const n = rs.filter((r) => r['채널'] === '뉴스').length;
       const y = rs.filter((r) => r['채널'] === '유튜브').length;
-      return { 브랜드: b, 구분: group[b], 수집일: last, 뉴스: n, 유튜브: y, 합계: n + y };
+      const a = rs.filter((r) => r['채널'] === 'SNS 광고').length;
+      return { 브랜드: b, 구분: group[b], 수집일: last, 뉴스: n, 유튜브: y, 광고: a, 합계: n + y + a };
     });
   },
 });
@@ -226,7 +229,13 @@ dash.calc('daily', {
   const recentDays = (rows, n) => [...new Set(rows.map((r) => r['수집일']))].sort().slice(-n);
 
   function chip(b) { const s = document.createElement('span'); s.className = 'bm-chip ' + cls(b); s.textContent = b; return s; }
-  function chTag(r) { const s = document.createElement('span'); s.className = 'bm-ch ' + (r['채널'] === '유튜브' ? 'yt' : 'news'); s.textContent = r['채널'] === '유튜브' ? '유튜브' + (r['유형'] === '공식' ? ' 공식' : '') : '뉴스'; return s; }
+  function chTag(r) {
+    const s = document.createElement('span');
+    const ch = r['채널'];
+    s.className = 'bm-ch ' + (ch === '유튜브' ? 'yt' : ch === 'SNS 광고' ? 'ad' : 'news');
+    s.textContent = ch === '유튜브' ? '유튜브' + (r['유형'] === '공식' ? ' 공식' : '') : ch === 'SNS 광고' ? '인스타·페북 광고' : '뉴스';
+    return s;
+  }
   function evTags(title) { return [...new Set(title.match(EVENT_RE) || [])].slice(0, 2).map((t) => { const s = document.createElement('span'); s.className = 'bm-tag'; s.textContent = t; return s; }); }
   function link(r) { const a = document.createElement('a'); a.href = r['링크']; a.target = '_blank'; a.rel = 'noopener'; a.textContent = r['제목']; return a; }
   function src(text) { const s = document.createElement('span'); s.className = 'src'; s.textContent = text; return s; }
@@ -271,7 +280,8 @@ dash.calc('daily', {
     const split = document.createElement('span'); split.className = 'split';
     const a = document.createElement('span'); Object.assign(a.dataset, { source: 'by_brand', field: '뉴스', where: w }); a.textContent = r['뉴스'];
     const b = document.createElement('span'); Object.assign(b.dataset, { source: 'by_brand', field: '유튜브', where: w }); b.textContent = r['유튜브'];
-    split.append('뉴스 ', a, ' · 유튜브 ', b);
+    const c2 = document.createElement('span'); Object.assign(c2.dataset, { source: 'by_brand', field: '광고', where: w }); c2.textContent = r['광고'];
+    split.append('뉴스 ', a, ' · 유튜브 ', b, ' · 광고 ', c2);
     t.append(name, num, split);
     t.onclick = () => { setFeed(r['브랜드'], r['수집일']); for (const f of document.querySelectorAll('#feed')) f.scrollIntoView({ behavior: 'smooth', block: 'start' }); };
     return t;
@@ -338,6 +348,15 @@ dash.calc('daily', {
       btn.onclick = () => { setFeed('몽클로스', ''); for (const f of document.querySelectorAll('#feed')) f.scrollIntoView({ behavior: 'smooth', block: 'start' }); };
       li.append(btn); ul.append(li);
     }
+  });
+
+  dash.draw('ads-list', (ul) => {
+    const g = dash.data('items');
+    ul.replaceChildren();
+    if (g.status !== 'ok') { emptyLi(ul, '—'); return; }
+    const rows = g.data.filter((r) => r['채널'] === 'SNS 광고' && isBed(r)).sort(byTime);
+    if (!rows.length) { emptyLi(ul, '아직 모은 광고가 없습니다. 예약 작업에 Uplika가 연결되면 평일 아침마다 채워집니다.'); return; }
+    for (const r of rows.slice(0, 10)) ul.append(itemLi(r, { chip: true }));
   });
 
   dash.draw('heat', (el) => {

@@ -2,7 +2,8 @@
 
 뉴스(Google 뉴스 RSS)와 유튜브(공식 채널 RSS + 키워드 검색 '오늘 업로드')에서
 최근 글을 모아 기존 기록(items.json)에 새 글만 더한다.
-사용: python3 monitor/collect.py monitor/data/items.json
+사용: python3 monitor/collect.py monitor/data/items.json [ads_raw.json]
+ads_raw.json(선택): Uplika 광고 검색(Meta 광고 라이브러리) 결과를 [{"brand": "씰리", "ads": [...]}] 로 모은 파일.
 """
 import json, re, sys, time, urllib.error, urllib.parse, urllib.request, html
 from datetime import datetime, timedelta, timezone
@@ -129,13 +130,54 @@ def yt_search(brand, group, query, rule, official):
     return out
 
 
+# Meta 광고 라이브러리에서 쓰는 공식 페이지(pageId). 없는 브랜드는 키워드로 찾고 본문에 브랜드가 있어야 남긴다
+AD_PAGES = {"시몬스": "142021542805228", "씰리": "557125447477878", "베스트슬립": "2887071251366762",
+            "에이스": "250389521725370", "코웨이": "337609789607046"}
+AD_KEYWORDS = {"N32": "N32", "템퍼": "템퍼", "몽클로스": "몽클로스"}
+AD_ALSO = {"N32": ["매트리스", "침대", "시몬스", "수면", "토퍼"]}  # 키워드 광고에 함께 있어야 할 말
+GROUP = {b[0]: b[1] for b in BRANDS}
+AD_MARK = re.compile(r"^\s*[#(*]*\s*광고(?![가-힣])\s*\)?\s*(지만)?\s*[•·]?\s*")  # 협찬 광고 앞의 '#광고', '(광고)' 표시
+
+
+def ads_rows(raw):
+    out = []
+    for blk in raw:
+        brand = blk.get("brand")
+        if brand not in GROUP:
+            continue
+        rule = next((b[5], b[6], b[7]) for b in BRANDS if b[0] == brand)
+        page = AD_PAGES.get(brand)
+        for ad in blk.get("ads") or []:
+            adv = ad.get("advertiser") or {}
+            body = (ad.get("title") or "") + "\n" + (ad.get("body") or "")
+            if page and adv.get("pageId") != page:
+                continue  # 공식 페이지 광고만 (대리점 광고 제외)
+            if page and rule[1] and not any(w.lower() in body.lower() for w in rule[1]):
+                continue  # 예: 코웨이는 정수기·비데 광고를 빼고 비렉스·매트리스 광고만
+            if not page and not match(body + " " + (adv.get("name") or ""), *rule):
+                continue
+            if not page and brand in AD_ALSO and not any(w.lower() in body.lower() for w in AD_ALSO[brand]):
+                continue
+            lines = [AD_MARK.sub("", ln).strip(" .-·•\u2800") for ln in body.splitlines()]
+            first = next((ln for ln in lines if ln), "")
+            try:
+                pub = datetime.strptime(ad.get("startDate", ""), "%Y-%m-%d").replace(tzinfo=KST)
+            except ValueError:
+                pub = NOW
+            if NOW - pub > timedelta(days=30):
+                continue  # 지금 돌고 있는 광고 중 최근 30일 안에 시작한 것만
+            out.append(row(brand, GROUP[brand], "SNS 광고", "공식" if page else "광고", first[:120],
+                           adv.get("name") or "", ad.get("libraryUrl") or "", pub))
+    return out
+
+
 def row(brand, group, channel, kind, title, source, url, pub):
     return {"수집일": NOW.strftime("%Y-%m-%d"), "브랜드": brand, "구분": group, "채널": channel,
             "유형": kind, "제목": html.unescape(title or "").strip(), "출처": source or "",
             "게시시각": pub.strftime("%Y-%m-%d %H:%M"), "링크": url}
 
 
-def main(path):
+def main(path, ads_path=None):
     try:
         prev = json.load(open(path, encoding="utf-8"))
     except FileNotFoundError:
@@ -149,6 +191,8 @@ def main(path):
         if cid:
             jobs.append(lambda: yt_channel(brand, group, cid))
         jobs += [lambda q=q: yt_search(brand, group, q, rule, cid) for q in yq]
+        if ads_path and brand == BRANDS[0][0]:
+            jobs.append(lambda: ads_rows(json.load(open(ads_path, encoding="utf-8"))))
         for job in jobs:
             try:
                 for r in job():
@@ -165,6 +209,7 @@ def main(path):
         {"label": "마지막 수집", "value": NOW.strftime("%Y-%m-%d %H:%M KST")},
         {"label": "이번에 새로 추가", "value": str(added)},
         {"label": "수집 실패", "value": "; ".join(errors) or "없음"},
+        {"label": "SNS 광고", "value": "Meta 광고 라이브러리 확인함" if ads_path else "이번엔 확인하지 않음"},
         {"label": "collect.py", "value": open(__file__, encoding="utf-8").read(), "type": "code", "lang": "python"},
     ]
     json.dump({"rows": rows, "meta": meta}, open(path, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
@@ -174,4 +219,4 @@ def main(path):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1])
+    main(sys.argv[1], sys.argv[2] if len(sys.argv) > 2 else None)
