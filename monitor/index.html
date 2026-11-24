@@ -101,7 +101,7 @@
     <h1>침대 브랜드 데일리 모니터</h1>
     <section id="insights" class="bm-ins">
       <h2>오늘의 인사이트</h2>
-      <p class="note">평일 아침 리포트가 그날 모은 기사·영상·광고를 브랜드별로 주제마다 묶어 센 것입니다. 오른쪽 숫자는 그 주제의 글 수입니다. 몽클로스(뷰티)는 맨 끝에 따로 둡니다.</p>
+      <p class="note">평일 아침 리포트가 그날 모은 기사·영상·광고를 브랜드별로 어떤 일이 있었는지 주제마다 정리한 것입니다. 꼬리표는 그 소식이 나온 곳(뉴스·유튜브·광고)입니다. 몽클로스(뷰티)는 맨 끝에 따로 둡니다.</p>
       <ul class="bm-ins-list" data-draw="insights" data-source="insights"></ul>
     </section>
     <section id="summary" class="sec">
@@ -369,9 +369,6 @@ dash.calc('overview', {
         head.append(ch);
       }
       if (Array.isArray(r['항목'])) {
-        const parts = [['뉴스', r['뉴스']], ['유튜브', r['유튜브']], ['광고', r['광고']]].filter((x) => x[1]).map((x) => x[0] + ' ' + x[1]);
-        const tot = document.createElement('span'); tot.className = 'tot'; tot.textContent = parts.join(' · ') || '0건';
-        head.append(tot);
         li.append(head);
         if (!r['항목'].length) { const t = document.createElement('span'); t.className = 'why'; t.textContent = '새 글 없음'; li.append(t); }
         else {
@@ -385,7 +382,6 @@ dash.calc('overview', {
             tag.textContent = ch.indexOf('광고') >= 0 ? '광고' : ch || '뉴스';
             c0.append(tag);
             tr.insertCell().textContent = it['내용'] || '';
-            const cn = tr.insertCell(); cn.className = 'n'; cn.textContent = (it['건수'] ?? '') + '건';
           }
           li.append(tb);
         }
