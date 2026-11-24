@@ -30,6 +30,11 @@
 .bm-ins-list li.beauty{border-color:color-mix(in srgb,var(--g-beauty) 30%,var(--color-border-line));background:color-mix(in srgb,var(--g-beauty) 5%,var(--color-bg))}
 .bm-ins-list li.none{opacity:.7}
 .bm-ins-list li.bm-empty{display:block;border:0;background:none;padding:0}
+.bm-inv{width:100%;border-collapse:collapse;font-size:var(--cds-font-size-caption);font-variant-numeric:tabular-nums}
+.bm-inv td{padding:4px 0;border-top:1px solid var(--color-border-line);vertical-align:top}
+.bm-inv td.n{text-align:right;white-space:nowrap;padding-left:8px;font-weight:var(--cds-font-weight-medium)}
+.bm-inv td.c{width:1%;white-space:nowrap;padding-right:6px}
+.bm-ins-list .tot{margin-left:auto;font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);font-variant-numeric:tabular-nums}
 .bm-ins-list .why{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted)}
 .bm-groups{display:grid;gap:var(--cds-gap-lg);grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
 .bm-group{display:grid;gap:var(--cds-gap-sm);align-content:start;min-width:0}
@@ -96,7 +101,7 @@
     <h1>침대 브랜드 데일리 모니터</h1>
     <section id="insights" class="bm-ins">
       <h2>오늘의 인사이트</h2>
-      <p class="note">평일 아침 리포트가 그날 모은 기사·영상·광고를 브랜드별로 한 줄씩 정리한 것입니다. 회색 글씨는 근거가 된 글 수입니다. 몽클로스(뷰티)는 맨 끝에 따로 둡니다.</p>
+      <p class="note">평일 아침 리포트가 그날 모은 기사·영상·광고를 브랜드별로 주제마다 묶어 센 것입니다. 오른쪽 숫자는 그 주제의 글 수입니다. 몽클로스(뷰티)는 맨 끝에 따로 둡니다.</p>
       <ul class="bm-ins-list" data-draw="insights" data-source="insights"></ul>
     </section>
     <section id="summary" class="sec">
@@ -363,9 +368,32 @@ dash.calc('overview', {
         ch.textContent = c || '종합';
         head.append(ch);
       }
-      const t = document.createElement('span'); t.textContent = r['인사이트'] || '';
-      li.append(head, t);
-      if (r['근거']) { const w = document.createElement('span'); w.className = 'why'; w.textContent = r['근거']; li.append(w); }
+      if (Array.isArray(r['항목'])) {
+        const parts = [['뉴스', r['뉴스']], ['유튜브', r['유튜브']], ['광고', r['광고']]].filter((x) => x[1]).map((x) => x[0] + ' ' + x[1]);
+        const tot = document.createElement('span'); tot.className = 'tot'; tot.textContent = parts.join(' · ') || '0건';
+        head.append(tot);
+        li.append(head);
+        if (!r['항목'].length) { const t = document.createElement('span'); t.className = 'why'; t.textContent = '새 글 없음'; li.append(t); }
+        else {
+          const tb = document.createElement('table'); tb.className = 'bm-inv';
+          for (const it of r['항목']) {
+            const tr = tb.insertRow();
+            const c0 = tr.insertCell(); c0.className = 'c';
+            const tag = document.createElement('span');
+            const ch = it['채널'] || '';
+            tag.className = 'bm-ch ' + (ch === '유튜브' ? 'yt' : ch.indexOf('광고') >= 0 ? 'ad' : 'news');
+            tag.textContent = ch.indexOf('광고') >= 0 ? '광고' : ch || '뉴스';
+            c0.append(tag);
+            tr.insertCell().textContent = it['내용'] || '';
+            const cn = tr.insertCell(); cn.className = 'n'; cn.textContent = (it['건수'] ?? '') + '건';
+          }
+          li.append(tb);
+        }
+      } else {
+        const t = document.createElement('span'); t.textContent = r['인사이트'] || '';
+        li.append(head, t);
+        if (r['근거']) { const w = document.createElement('span'); w.className = 'why'; w.textContent = r['근거']; li.append(w); }
+      }
       ul.append(li);
     }
   });
