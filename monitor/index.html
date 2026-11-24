@@ -16,6 +16,21 @@
 .bm .dot{display:inline-block;width:10px;height:10px;border-radius:50%;flex:none}
 .bm .dot.own{background:var(--g-own)} .bm .dot.rival{background:var(--g-rival)} .bm .dot.beauty{background:var(--g-beauty)}
 
+.bm-kpis{display:grid;gap:var(--cds-gap-sm);grid-template-columns:repeat(auto-fit,minmax(118px,1fr))}
+.bm-kpi{background:var(--color-panel);border:1px solid var(--color-border-line);border-radius:var(--cds-radius);padding:var(--cds-pad-md);display:grid;gap:2px;align-content:start;min-width:0}
+.bm-kpi.main{border-color:color-mix(in srgb,var(--color-fg) 45%,var(--color-border-line))}
+.bm-kpi .k{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted)}
+.bm-kpi .v{font-family:var(--font-anthropic-serif);font-size:1.9rem;line-height:1.1;font-variant-numeric:tabular-nums}
+.bm-kpi .s{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);font-variant-numeric:tabular-nums}
+.bm-ins{background:var(--color-panel);border:1px solid var(--color-border-line);border-left:3px solid var(--color-fg);border-radius:var(--cds-radius);padding:var(--cds-pad-lg);display:grid;gap:var(--cds-gap-sm)}
+.bm-ins-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.bm-ins-list{grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:var(--cds-gap-sm)}
+.bm-ins-list li{display:grid;gap:4px;align-content:start;line-height:1.55;overflow-wrap:anywhere;min-width:0;padding:var(--cds-pad-md);border-radius:var(--cds-radius);border:1px solid color-mix(in srgb,var(--g-own) 30%,var(--color-border-line));background:color-mix(in srgb,var(--g-own) 5%,var(--color-bg))}
+.bm-ins-list li.rival{border-color:color-mix(in srgb,var(--g-rival) 30%,var(--color-border-line));background:color-mix(in srgb,var(--g-rival) 5%,var(--color-bg))}
+.bm-ins-list li.beauty{border-color:color-mix(in srgb,var(--g-beauty) 30%,var(--color-border-line));background:color-mix(in srgb,var(--g-beauty) 5%,var(--color-bg))}
+.bm-ins-list li.none{opacity:.7}
+.bm-ins-list li.bm-empty{display:block;border:0;background:none;padding:0}
+.bm-ins-list .why{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted)}
 .bm-groups{display:grid;gap:var(--cds-gap-lg);grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
 .bm-group{display:grid;gap:var(--cds-gap-sm);align-content:start;min-width:0}
 .bm-tiles{display:grid;gap:var(--cds-gap-sm);grid-template-columns:repeat(auto-fill,minmax(120px,1fr))}
@@ -79,6 +94,23 @@
 <div class="bm">
   <header id="top" class="sec">
     <h1>침대 브랜드 데일리 모니터</h1>
+    <section id="insights" class="bm-ins">
+      <h2>오늘의 인사이트</h2>
+      <p class="note">평일 아침 리포트가 그날 모은 기사·영상·광고를 브랜드별로 한 줄씩 정리한 것입니다. 회색 글씨는 근거가 된 글 수입니다. 몽클로스(뷰티)는 맨 끝에 따로 둡니다.</p>
+      <ul class="bm-ins-list" data-draw="insights" data-source="insights"></ul>
+    </section>
+    <section id="summary" class="sec">
+      <h3><span data-draw="kpi-day">—</span> 수집분 한눈에 보기</h3>
+      <div class="bm-kpis">
+        <div class="bm-kpi main"><span class="k">새 글 (침대 브랜드)</span><span class="v" data-draw="kpi" data-source="overview" data-field="전체" data-row="0">—</span><span class="s">자사 <span data-draw="kpi" data-source="overview" data-field="자사" data-row="0">—</span> · 경쟁사 <span data-draw="kpi" data-source="overview" data-field="경쟁사" data-row="0">—</span></span></div>
+        <div class="bm-kpi"><span class="k">뉴스</span><span class="v" data-draw="kpi" data-source="overview" data-field="뉴스" data-row="0">—</span></div>
+        <div class="bm-kpi"><span class="k">유튜브</span><span class="v" data-draw="kpi" data-source="overview" data-field="유튜브" data-row="0">—</span></div>
+        <div class="bm-kpi"><span class="k">인스타·페북 광고</span><span class="v" data-draw="kpi" data-source="overview" data-field="광고" data-row="0">—</span></div>
+        <div class="bm-kpi"><span class="k">행사·프로모션 (최근 7일)</span><span class="v" data-draw="kpi" data-source="overview" data-field="행사7일" data-row="0">—</span></div>
+        <div class="bm-kpi"><span class="k">몽클로스 (뷰티)</span><span class="v" data-draw="kpi" data-source="overview" data-field="몽클로스" data-row="0">—</span></div>
+        <div class="bm-kpi"><span class="k">쌓인 기록 (최근 45일)</span><span class="v" data-draw="kpi" data-source="overview" data-field="누적" data-row="0">—</span></div>
+      </div>
+    </section>
     <p class="lede" data-draw="lede" data-source="by_group">—</p>
     <div class="legend">
       <span style="display:flex;align-items:center;gap:6px"><span class="dot own"></span>자사 침대 (시몬스·N32)</span>
@@ -185,7 +217,7 @@ dash.calc('by_brand', {
       const rs = items.filter((r) => r['브랜드'] === b && r['수집일'] === last);
       const n = rs.filter((r) => r['채널'] === '뉴스').length;
       const y = rs.filter((r) => r['채널'] === '유튜브').length;
-      const a = rs.filter((r) => r['채널'] === 'SNS 광고').length;
+      const a = rs.filter((r) => r['채널'] === 'SNS 광고' || r['채널'] === '인스타 광고').length;
       return { 브랜드: b, 구분: group[b], 수집일: last, 뉴스: n, 유튜브: y, 광고: a, 합계: n + y + a };
     });
   },
@@ -215,6 +247,34 @@ dash.calc('daily', {
     return [...out].map(([k, n]) => { const [b, d] = k.split('|'); return { 브랜드: b, 수집일: d, 건수: n }; });
   },
 });
+
+dash.calc('overview', {
+  title: '한눈에 보기',
+  description: '가장 최근 수집일의 침대 브랜드 새 글 수(뉴스·유튜브·광고), 몽클로스 수, 최근 7개 수집일의 행사·프로모션 글 수, 보관 중인 전체 기록 수',
+  inputs: ['items'],
+  fn: (items) => {
+    const last = items.reduce((m, r) => (r['수집일'] > m ? r['수집일'] : m), '');
+    const own = ['시몬스', 'N32'];
+    const isAd = (r) => r['채널'] === 'SNS 광고' || r['채널'] === '인스타 광고';
+    const bed = (r) => r['브랜드'] !== '몽클로스';
+    const today = items.filter((r) => r['수집일'] === last);
+    const posts = today.filter(bed);
+    const days = [...new Set(items.map((r) => r['수집일']))].sort().slice(-7);
+    const ev = /팝업|프로모션|할인|이벤트|행사|콘서트|협찬|전시|체험|오픈|기획전|세일|블랙프라이데이|페스티벌|캠페인|사은|증정|공연|클래스|북클럽|입점/;
+    return [{
+      수집일: last,
+      전체: posts.length,
+      자사: posts.filter((r) => own.includes(r['브랜드'])).length,
+      경쟁사: posts.filter((r) => !own.includes(r['브랜드'])).length,
+      뉴스: posts.filter((r) => r['채널'] === '뉴스').length,
+      유튜브: posts.filter((r) => r['채널'] === '유튜브').length,
+      광고: posts.filter(isAd).length,
+      몽클로스: today.filter((r) => !bed(r)).length,
+      행사7일: items.filter((r) => bed(r) && days.includes(r['수집일']) && ev.test(r['제목'])).length,
+      누적: items.length,
+    }];
+  },
+});
 </script>
 
 <script>
@@ -231,7 +291,7 @@ dash.calc('daily', {
   function chip(b) { const s = document.createElement('span'); s.className = 'bm-chip ' + cls(b); s.textContent = b; return s; }
   function chTag(r) {
     const s = document.createElement('span');
-    const ch = r['채널'];
+    const ch = r['채널'] === '인스타 광고' ? 'SNS 광고' : r['채널'];
     s.className = 'bm-ch ' + (ch === '유튜브' ? 'yt' : ch === 'SNS 광고' ? 'ad' : 'news');
     s.textContent = ch === '유튜브' ? '유튜브' + (r['유형'] === '공식' ? ' 공식' : '') : ch === 'SNS 광고' ? '인스타·페북 광고' : '뉴스';
     return s;
@@ -263,6 +323,50 @@ dash.calc('daily', {
     if (bb.status === 'ok') {
       const top = bb.data.filter((r) => r['구분'] !== '뷰티').sort((a, b) => b['합계'] - a['합계'])[0];
       if (top && top['합계'] > 0) { add(' 침대 브랜드 중 가장 많이 나온 곳은 '); add(top['브랜드'] + ' ' + top['합계'] + '건', cls(top['브랜드'])); add('이에요.'); }
+    }
+  });
+
+  dash.draw('kpi', (el) => {
+    const g = dash.data('overview');
+    if (g.status !== 'ok' || !g.data || !g.data.length) { el.textContent = '—'; return; }
+    const v = g.data[0][el.dataset.field];
+    el.textContent = v == null ? '—' : String(v);
+  });
+  dash.draw('kpi-day', (el) => {
+    const g = dash.data('overview');
+    el.textContent = g.status === 'ok' && g.data && g.data.length && g.data[0]['수집일'] ? md(g.data[0]['수집일']) : '—';
+  });
+  dash.draw('insights', (ul) => {
+    const g = dash.data('insights');
+    ul.replaceChildren();
+    if (g.status === 'loading') { emptyLi(ul, '—'); return; }
+    const rows = g.status === 'ok' && Array.isArray(g.data) ? g.data : [];
+    if (!rows.length) { emptyLi(ul, '아직 인사이트가 없습니다. 평일 아침 리포트가 돌면 여기에 채워집니다.'); return; }
+    const last = rows.reduce((m, r) => (r['수집일'] > m ? r['수집일'] : m), '');
+    const today = rows.filter((x) => x['수집일'] === last);
+    const byBrand = today.some((r) => r['브랜드']);
+    const ordered = byBrand
+      ? BM_ORDER.map((b) => today.find((r) => r['브랜드'] === b)).filter(Boolean).concat(today.filter((r) => !BM_ORDER.includes(r['브랜드'])))
+      : today;
+    for (const r of ordered) {
+      const li = document.createElement('li');
+      const head = document.createElement('div');
+      head.style.cssText = 'display:flex;gap:6px;align-items:center;flex-wrap:wrap';
+      if (byBrand && r['브랜드']) {
+        li.className = cls(r['브랜드']) + ((r['인사이트'] || '').startsWith('새 글 없음') ? ' none' : '');
+        head.append(chip(r['브랜드']));
+        if (grp(r['브랜드']) === '뷰티') head.append(src('뷰티 · 침대 집계와 별도'));
+      } else {
+        const ch = document.createElement('span');
+        const c = r['채널'] || '';
+        ch.className = 'bm-ch ' + (c === '유튜브' ? 'yt' : c.indexOf('광고') >= 0 ? 'ad' : 'news');
+        ch.textContent = c || '종합';
+        head.append(ch);
+      }
+      const t = document.createElement('span'); t.textContent = r['인사이트'] || '';
+      li.append(head, t);
+      if (r['근거']) { const w = document.createElement('span'); w.className = 'why'; w.textContent = r['근거']; li.append(w); }
+      ul.append(li);
     }
   });
 
@@ -354,7 +458,7 @@ dash.calc('daily', {
     const g = dash.data('items');
     ul.replaceChildren();
     if (g.status !== 'ok') { emptyLi(ul, '—'); return; }
-    const rows = g.data.filter((r) => r['채널'] === 'SNS 광고' && isBed(r)).sort(byTime);
+    const rows = g.data.filter((r) => (r['채널'] === 'SNS 광고' || r['채널'] === '인스타 광고') && isBed(r)).sort(byTime);
     if (!rows.length) { emptyLi(ul, '아직 모은 광고가 없습니다. 예약 작업에 Uplika가 연결되면 평일 아침마다 채워집니다.'); return; }
     for (const r of rows.slice(0, 10)) ul.append(itemLi(r, { chip: true }));
   });
@@ -419,7 +523,7 @@ dash.calc('daily', {
       return r['브랜드'] === BM.brand;
     };
     return g.data.filter((r) => okBrand(r) &&
-      (!BM.channel || r['채널'] === BM.channel) &&
+      (!BM.channel || (r['채널'] === '인스타 광고' ? 'SNS 광고' : r['채널']) === BM.channel) &&
       (!BM.day || r['수집일'] === BM.day) &&
       (!BM.q || (r['제목'] + ' ' + r['출처']).toLowerCase().includes(BM.q)));
   };
