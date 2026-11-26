@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>르르르×전북현대 진행 현황</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light dark;--bg:light-dark(#f4f6f3,#0d1410);--panel:light-dark(#ffffff,#16201a);--ink:light-dark(#132018,#e6efe8);--mute:light-dark(#5d6b62,#94a59a);--line:light-dark(#dde4de,#26332b);--green:#0b5a37;--band:light-dark(#0b5a37,#08351f);--lime:#c6e83a;--done:light-dark(#0b7a48,#47c27f);--warn:light-dark(#b45309,#f0a35a);--bad:light-dark(#c1121f,#ff7a80)}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "IBM Plex Sans KR",system-ui,sans-serif;overflow-x:clip}
+.band{padding:clamp(24px,4vw,48px) max(5vw,16px)}
+.top{background:var(--band);color:#fff}
+.wrap{max-width:1240px;margin:0 auto}
+h1{font-size:clamp(26px,4vw,40px);line-height:1.1;margin:0 0 6px;text-wrap:balance;font-weight:700}
+.sub{margin:0;color:#cfe3d6;font-size:15px}
+.meters{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:24px}
+@media(max-width:900px){.meters{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.m{background:rgba(255,255,255,.08);border-radius:12px;padding:14px 16px}
+.m.pick{background:rgba(198,232,58,.16);outline:1px solid rgba(198,232,58,.5)}
+.m b{display:block;font-size:clamp(28px,4vw,38px);line-height:1.1;font-variant-numeric:tabular-nums}
+.m span{font-size:14px;color:#cfe3d6}
+.m em{font-style:normal;font-size:13px;color:var(--lime);font-weight:700}
+.bar{height:8px;border-radius:4px;background:rgba(255,255,255,.18);margin-top:10px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--lime);transition:width .35s}
+.status{margin:18px 0 0;font-size:14px;color:#e6f2ea;min-height:1.5em}
+.status.err{color:#ffd1d4;font-weight:700}
+.fx{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.fx button{min-height:44px;padding:4px 10px;border:0;background:transparent;color:var(--mute);font:inherit;font-size:13px;cursor:pointer;white-space:nowrap}
+.fx button+button{border-left:1px solid var(--line)}
+.fx button:focus-visible{outline:3px solid var(--lime);outline-offset:-3px}
+.fx button.on.wait{background:light-dark(#eef1ee,#22302a);color:var(--ink);font-weight:700}
+.fx button.on.ok{background:var(--green);color:#fff;font-weight:700}
+.fx button.on.no{background:light-dark(#fde2e4,#3a1518);color:var(--bad);font-weight:700}
+.fx button.full{opacity:.4;cursor:not-allowed}
+.fxl{font-size:12px;color:var(--mute);margin:0 0 3px}
+.row.out{opacity:.5}
+.row.picked{border-color:var(--done);box-shadow:0 0 0 1px var(--done) inset}
+.chip.out{opacity:.45;text-decoration:line-through}
+h2{font-size:20px;margin:0 0 4px}
+.hint{color:var(--mute);font-size:14px;margin:0 0 14px}
+.strip{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:8px}
+.day{flex:0 0 172px;scroll-snap-align:start;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;min-height:220px}
+.day.today{border-color:var(--done);box-shadow:0 0 0 2px var(--done) inset}
+.day h3{margin:0;font-size:16px;display:flex;justify-content:space-between;align-items:baseline}
+.day h3 small{font-size:13px;color:var(--mute);font-weight:500}
+.dl{font-size:13px;font-weight:700;color:var(--bad);margin:2px 0 0}
+.grp{font-size:13px;color:var(--mute);margin:10px 0 4px}
+.chip{display:flex;align-items:center;gap:6px;width:100%;min-height:40px;margin:0 0 6px;padding:6px 10px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--ink);font:inherit;font-size:14px;text-align:left;cursor:pointer}
+.chip .t{margin-left:auto;font-size:13px;color:var(--mute);white-space:nowrap}
+.chip.on{background:light-dark(#e3f4ea,#173b27);border-color:var(--done);color:var(--done)}
+.chip.on .t{color:var(--done)}
+.box{width:18px;height:18px;flex:none;border-radius:5px;border:2px solid currentColor;display:grid;place-items:center;font-size:12px;line-height:1}
+.chip:focus-visible,.tg:focus-visible,.f:focus-visible{outline:3px solid var(--lime);outline-offset:2px}
+.empty{font-size:13px;color:var(--mute)}
+.tools{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+.f{min-height:40px;padding:6px 14px;border-radius:20px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font:inherit;font-size:14px;cursor:pointer}
+.f.on{background:var(--green);border-color:var(--green);color:#fff}
+.list{display:grid;gap:10px}
+.row{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr) auto auto;gap:12px;align-items:center}
+@media(max-width:1000px) and (min-width:601px){.row{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+.row.all{opacity:.62}
+.who b{font-size:16px}
+.dates{font-size:14px;color:var(--mute);font-variant-numeric:tabular-nums}
+.dates em{font-style:normal;color:var(--ink)}
+.flag{display:inline-block;font-size:12px;font-weight:700;padding:1px 8px;border-radius:10px;margin-top:4px}
+.flag.adj{background:light-dark(#fdecd2,#3a2712);color:var(--warn)}
+.note{grid-column:1/-1;font-size:14px;color:var(--mute);border-top:1px dashed var(--line);padding-top:8px;margin:0}
+.tgs{display:flex;gap:6px}
+.tg{min-width:72px;min-height:44px;border-radius:10px;border:1px solid var(--line);background:transparent;color:var(--mute);font:inherit;font-size:14px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:4px 6px}
+.tg.on{background:var(--done);border-color:var(--done);color:#fff}
+button:disabled{cursor:wait}
+@media(max-width:600px){.fx button{flex:1}.row{grid-template-columns:minmax(0,1fr)}.tgs{justify-content:stretch}.tg{flex:1}.day{flex-basis:150px}}
+@media(prefers-reduced-motion:reduce){.bar i{transition:none}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+// 구글 Apps Script 웹 앱 주소 (배포 후 여기에 붙여넣기)
+const API = "";
+const MAX_PICK = 3;
+
+const P = [
+  {id:1,nick:"재교",draft:"11-27",dT:"",pub:"12-01",pT:"",note:"모든 일정 협의 가능",flag:null},
+  {id:2,nick:"제리스텔라",draft:"11-28",dT:"15:00",pub:"12-04",pT:"22:00",note:"12/4 저녁 촬영 후 12/5(토) 08:00 발행 희망, 22시도 가능",flag:"발행 조정 희망"},
+  {id:3,nick:"남아나",draft:"11-28",dT:"15:00",pub:"12-04",pT:"15:00",note:"11/29부터 해외 일정, 가이드 11/27까지 전달 필요",flag:"가이드 11/27까지"},
+  {id:4,nick:"지우지유",draft:"11-30",dT:"13:00",pub:"12-03",pT:"13:00",note:"11/29 불가",flag:null},
+  {id:5,nick:"오리궁디",draft:"11-30",dT:"",pub:"12-01",pT:"",note:"",flag:null},
+  {id:6,nick:"트래블룸",draft:"12-01",dT:"11:00",pub:"12-04",pT:"11:00",note:"요청 일정에 맞춰 가능",flag:null},
+  {id:7,nick:"하벨",draft:"12-01",dT:"14:00",pub:"12-04",pT:"12:00",note:"전 일정 가능",flag:null},
+  {id:8,nick:"나분자기",draft:"12-01",dT:"16:00",pub:"12-04",pT:"12:00",note:"초안 확정되면 발행은 언제든 가능, 영상 검수 시 마감일 자정까지",flag:null},
+  {id:9,nick:"흥청망청",draft:"12-01",dT:"",pub:"12-04",pT:"17:00",note:"초안 12/1까지 가능 확인 완료",flag:null}
+];
+const FIX = [["wait","검토 중"],["ok","픽스"],["no","미선정"]];
+const DAYS = [["11-27","금"],["11-28","토"],["11-29","일"],["11-30","월"],["12-01","화"],["12-02","수"],["12-03","목"],["12-04","금"]];
+const DEAD = {"12-01":"초안 마감","12-03":"제품 수령·촬영 마감","12-04":"컨펌·발행 마감"};
+const STAGES = [["draft","초안 수령"],["confirm","컨펌"],["publish","발행 완료"]];
+
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const md = k => { const [m,d] = k.split("-"); return (+m) + "/" + (+d); };
+const todayKey = (() => { try { return new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Seoul",month:"2-digit",day:"2-digit"}).format(new Date()).replace("/","-"); } catch(e) { return ""; } })();
+
+let rows = {}, updated = null, filter = "all", status = "", err = false, loaded = false, pending = 0;
+
+const r = id => rows[id] || (rows[id] = {fix:"wait",draft:false,confirm:false,publish:false});
+const fx = id => (rows[id] && rows[id].fix) || "wait";
+const is = (id, s) => !!(rows[id] && rows[id][s]);
+const pickN = () => P.filter(p => fx(p.id) === "ok").length;
+
+function say(msg, isErr) { status = msg; err = !!isErr; render(); }
+
+async function load() {
+  if (!API) { say("저장 연결 전이라 체크가 아직 저장되지 않아요.", true); return; }
+  if (pending) return;
+  try {
+    const res = await fetch(API, {cache:"no-store"});
+    const d = await res.json();
+    if (pending) return;
+    if (d && d.rows) { rows = d.rows; updated = d.updated; loaded = true; if (err) { status = ""; err = false; } render(); }
+  } catch(e) { say("불러오지 못했어요. 잠시 후 새로고침해 주세요.", true); }
+}
+
+async function send(id, field, value, prev) {
+  if (!API) { r(id)[field] = prev; say("저장 연결 전이라 체크가 아직 저장되지 않아요.", true); return; }
+  pending++;
+  say("저장 중…");
+  try {
+    const p = P.find(x => x.id === id);
+    const res = await fetch(API, {method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body: JSON.stringify({id, field, value, nick: p ? p.nick : ""})});
+    const d = await res.json();
+    pending--;
+    if (d && d.rows) { rows = d.rows; updated = d.updated; }
+    if (d && d.error === "limit") say("광고주 픽스는 " + MAX_PICK + "명까지예요. 다른 분을 먼저 바꿔 주세요.", true);
+    else if (!d || !d.ok) { r(id)[field] = prev; say("저장에 실패했어요. 다시 눌러 주세요.", true); }
+    else say("");
+  } catch(e) {
+    pending--;
+    r(id)[field] = prev;
+    say("저장에 실패했어요. 인터넷 연결을 확인하고 다시 눌러 주세요.", true);
+  }
+}
+
+function toggle(id, s) {
+  const prev = is(id, s);
+  r(id)[s] = !prev;
+  send(id, s, !prev, prev);
+}
+
+function setFix(id, v) {
+  const prev = fx(id);
+  if (prev === v) return;
+  if (v === "ok" && pickN() >= MAX_PICK) { say("광고주 픽스는 " + MAX_PICK + "명까지예요. 다른 분을 먼저 '검토 중'이나 '미선정'으로 바꿔 주세요.", true); return; }
+  r(id).fix = v;
+  send(id, "fix", v, prev);
+}
+
+function chip(p, s, t) {
+  const on = is(p.id, s);
+  return `<button class="chip${on?" on":""}${fx(p.id)==="no"?" out":""}" data-id="${p.id}" data-s="${s}" aria-pressed="${on}"><span class="box">${on?"✓":""}</span>${esc(p.nick)}<span class="t">${esc(t)}</span></button>`;
+}
+
+function render() {
+  const n = P.length, k = pickN(), full = k >= MAX_PICK;
+  const meters = `<div class="m pick"><span>광고주 픽스</span><b>${k} / ${MAX_PICK}</b>${full?"<em>선정 완료</em>":`<em>${MAX_PICK-k}명 더 선택</em>`}<div class="bar"><i style="width:${Math.round(k/MAX_PICK*100)}%"></i></div></div>`
+    + STAGES.map(([s,l]) => { const c = P.filter(p => is(p.id,s)).length; return `<div class="m"><span>${l}</span><b>${c} / ${n}</b><div class="bar"><i style="width:${Math.round(c/n*100)}%"></i></div></div>`; }).join("");
+  const days = DAYS.map(([d,w]) => {
+    const dr = P.filter(p => p.draft === d), pu = P.filter(p => p.pub === d);
+    const body = (dr.length ? `<p class="grp">초안 ${dr.length}건</p>` + dr.map(p => chip(p,"draft",p.dT)).join("") : "")
+      + (pu.length ? `<p class="grp">발행 ${pu.length}건</p>` + pu.map(p => chip(p,"publish",p.pT)).join("") : "");
+    return `<div class="day${d===todayKey?" today":""}"><h3>${md(d)}<small>${w}${d===todayKey?" · 오늘":""}</small></h3>${DEAD[d]?`<p class="dl">${DEAD[d]}</p>`:""}${body || '<p class="empty">일정 없음</p>'}</div>`;
+  }).join("");
+  const done = p => STAGES.every(([s]) => is(p.id,s));
+  const shown = P.filter(p => filter === "all" ? true : filter === "flag" ? !!p.flag : filter === "ok" ? fx(p.id) === "ok" : filter === "wait" ? fx(p.id) === "wait" : !done(p));
+  const list = shown.map(p => {
+    const f = fx(p.id);
+    const tg = STAGES.map(([s,l]) => { const on = is(p.id,s); return `<button class="tg${on?" on":""}" data-id="${p.id}" data-s="${s}" aria-pressed="${on}"><span>${on?"✓":"○"}</span>${l}</button>`; }).join("");
+    const fxc = `<div><p class="fxl">광고주 픽스</p><div class="fx" role="group" aria-label="광고주 픽스">${FIX.map(([v,l]) => `<button class="${v}${f===v?" on":""}${v==="ok"&&full&&f!=="ok"?" full":""}" data-fx="${v}" data-pid="${p.id}" aria-pressed="${f===v}">${l}</button>`).join("")}</div></div>`;
+    return `<div class="row${done(p)?" all":""}${f==="no"?" out":""}${f==="ok"?" picked":""}"><div class="who"><b>${esc(p.nick)}</b>${p.flag?`<br><span class="flag adj">${esc(p.flag)}</span>`:""}</div><div class="dates">초안 <em>${md(p.draft)} ${esc(p.dT)}</em><br>발행 <em>${md(p.pub)} ${esc(p.pT)}</em></div>${fxc}<div class="tgs">${tg}</div>${p.note?`<p class="note">${esc(p.note)}</p>`:""}</div>`;
+  }).join("") || '<p class="empty">해당하는 블로거가 없어요.</p>';
+  const fl = [["all","전체 "+n],["ok","픽스 "+k],["wait","픽스 대기 "+P.filter(p=>fx(p.id)==="wait").length],["flag","확인 필요 "+P.filter(p=>p.flag).length],["todo","미완료 "+P.filter(p=>!done(p)).length]];
+  const last = updated ? new Date(updated).toLocaleString("ko-KR",{timeZone:"Asia/Seoul",month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit"}) : "";
+  const st = status || (API ? (loaded ? (last ? "체크하면 바로 저장돼요 · 마지막 저장 " + last : "체크하면 바로 저장돼요.") : "불러오는 중…") : "");
+  document.getElementById("root").innerHTML = `
+  <header class="band top"><div class="wrap">
+    <h1>르르르×전북현대 블로거 진행 현황</h1>
+    <p class="sub">9팀 중 ${MAX_PICK}팀 선정 · 초안 ~12/1(화) · 제품 수령·촬영 ~12/3(목) · 컨펌·발행 ~12/4(금)</p>
+    <div class="meters">${meters}</div>
+    <p class="status${err?" err":""}" role="status">${esc(st)}</p>
+  </div></header>
+  <section class="band"><div class="wrap">
+    <h2>블로거별 체크</h2>
+    <p class="hint">광고주 픽스는 ${MAX_PICK}명까지 고를 수 있어요. 미선정으로 바꾸면 흐리게 표시돼요.</p>
+    <div class="tools">${fl.map(([key,l])=>`<button class="f${filter===key?" on":""}" data-f="${key}">${l}</button>`).join("")}</div>
+    <div class="list">${list}</div>
+  </div></section>
+  <section class="band" style="padding-top:0"><div class="wrap">
+    <h2>날짜별 일정</h2>
+    <p class="hint">받은 초안, 올라온 발행 건을 눌러 체크하세요. 한 번 더 누르면 해제돼요.</p>
+    <div class="strip">${days}</div>
+  </div></section>`;
+}
+
+document.addEventListener("click", ev => {
+  const x = ev.target.closest("[data-fx]");
+  if (x) { setFix(+x.dataset.pid, x.dataset.fx); return; }
+  const b = ev.target.closest("[data-s]");
+  if (b) { toggle(+b.dataset.id, b.dataset.s); return; }
+  const f = ev.target.closest("[data-f]");
+  if (f) { filter = f.dataset.f; render(); }
+});
+
+render();
+load();
+setInterval(load, 30000);
+document.addEventListener("visibilitychange", () => { if (!document.hidden) load(); });
+</script>
+</body>
+</html>
