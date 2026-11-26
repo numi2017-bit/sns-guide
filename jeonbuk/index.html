@@ -124,7 +124,7 @@ async function load() {
 }
 
 async function send(id, field, value, prev) {
-  if (!API) { r(id)[field] = prev; say("저장 연결 전이라 체크가 아직 저장되지 않아요.", true); return; }
+  if (!API) { say("저장 연결 전이라 지금 체크는 이 화면에만 보이고, 새로고침하면 사라져요.", true); return; }
   pending++;
   say("저장 중…");
   try {
