@@ -16,6 +16,13 @@
 .bm .dot{display:inline-block;width:10px;height:10px;border-radius:50%;flex:none}
 .bm .dot.own{background:var(--g-own)} .bm .dot.rival{background:var(--g-rival)} .bm .dot.beauty{background:var(--g-beauty)}
 
+.bm-tabs{display:flex;flex-wrap:wrap;gap:6px;border-bottom:1px solid var(--color-border-line);padding-bottom:var(--cds-gap-sm)}
+.bm-tab{font:inherit;font-size:var(--cds-font-size-caption);padding:6px 14px;border:1px solid var(--color-border-line);border-radius:999px;background:var(--color-panel);color:var(--color-fg);cursor:pointer;white-space:nowrap}
+.bm-tab[aria-selected="true"]{background:var(--color-fg);color:var(--color-bg);border-color:var(--color-fg)}
+.bm-tab:focus-visible{outline:2px solid var(--color-fg);outline-offset:2px}
+.bm-panel{display:grid;gap:var(--cds-gap-xl)}
+.bm-panel[hidden]{display:none}
+.bm-kw{font-size:11px;padding:0 6px;border-radius:4px;white-space:nowrap;border:1px solid var(--color-border-line);color:var(--color-fg-muted);line-height:1.5}
 .bm-kpis{display:grid;gap:var(--cds-gap-sm);grid-template-columns:repeat(auto-fit,minmax(118px,1fr))}
 .bm-kpi{background:var(--color-panel);border:1px solid var(--color-border-line);border-radius:var(--cds-radius);padding:var(--cds-pad-md);display:grid;gap:2px;align-content:start;min-width:0}
 .bm-kpi.main{border-color:color-mix(in srgb,var(--color-fg) 45%,var(--color-border-line))}
@@ -30,6 +37,16 @@
 .bm-ins-list li.beauty{border-color:color-mix(in srgb,var(--g-beauty) 30%,var(--color-border-line));background:color-mix(in srgb,var(--g-beauty) 5%,var(--color-bg))}
 .bm-ins-list li.none{opacity:.7}
 .bm-ins-list li.bm-empty{display:block;border:0;background:none;padding:0}
+.bm-pov{list-style:none;margin:0;padding:0;display:grid;gap:var(--cds-gap-sm)}
+.bm-pov li{display:grid;gap:6px;padding:var(--cds-pad-md);border-radius:var(--cds-radius);border:1px solid var(--color-border-line);background:var(--color-bg);min-width:0;overflow-wrap:anywhere}
+.bm-pov .kw{font-weight:var(--cds-font-weight-medium)}
+.bm-pov .row{display:grid;grid-template-columns:auto 1fr;gap:4px 8px;align-items:baseline;line-height:1.55}
+.bm-pov .lab{font-size:11px;white-space:nowrap;padding:0 6px;border-radius:4px;line-height:1.6}
+.bm-pov .lab.rival{background:color-mix(in srgb,var(--g-rival) 18%,transparent)}
+.bm-pov .lab.own{background:color-mix(in srgb,var(--g-own) 18%,transparent)}
+.bm-pov .lab.idea{border:1px dashed var(--color-border-line)}
+.bm-pov .lab.do{background:var(--color-fg);color:var(--color-bg)}
+.bm-same{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);flex-basis:100%}
 .bm-inv{width:100%;border-collapse:collapse;font-size:var(--cds-font-size-caption);font-variant-numeric:tabular-nums}
 .bm-inv td{padding:4px 0;border-top:1px solid var(--color-border-line);vertical-align:top}
 .bm-inv td.n{text-align:right;white-space:nowrap;padding-left:8px;font-weight:var(--cds-font-weight-medium)}
@@ -97,8 +114,19 @@
 </style>
 
 <div class="bm">
+  <h1 id="title">브랜드·트렌드 데일리 모니터</h1>
+  <nav class="bm-tabs" id="tabs" role="tablist" aria-label="분야">
+    <button type="button" class="bm-tab" role="tab" data-tab="bed" aria-selected="true">광고주</button>
+    <button type="button" class="bm-tab" role="tab" data-tab="interior" aria-selected="false">인테리어</button>
+    <button type="button" class="bm-tab" role="tab" data-tab="pet" aria-selected="false">펫산업</button>
+    <button type="button" class="bm-tab" role="tab" data-tab="well" aria-selected="false">웰니스</button>
+    <button type="button" class="bm-tab" role="tab" data-tab="beauty" aria-selected="false">뷰티·패션</button>
+    <button type="button" class="bm-tab" role="tab" data-tab="ai" aria-selected="false">AI·트렌드</button>
+  </nav>
+  <div id="tab-bed" class="bm-panel" data-panel="bed">
   <header id="top" class="sec">
-    <h1>침대 브랜드 데일리 모니터</h1>
+    <h2>광고주 모니터</h2>
+    <p class="note">시몬스·N32(침대)와 몽클로스(뷰티), 그리고 침대 경쟁사 5곳(베스트슬립·씰리·템퍼·에이스·코웨이)을 봅니다.</p>
     <section id="insights" class="bm-ins">
       <h2>오늘의 인사이트</h2>
       <p class="note">평일 아침 리포트가 그날 모은 기사·영상·광고를 브랜드별로 어떤 일이 있었는지 주제마다 정리한 것입니다. 꼬리표는 그 소식이 나온 곳(뉴스·유튜브·광고)입니다. 몽클로스(뷰티)는 맨 끝에 따로 둡니다.</p>
@@ -136,10 +164,16 @@
     </div>
   </section>
 
+  <section id="pov" class="bm-card">
+    <h2>시몬스·N32 관점</h2>
+    <p class="note">오늘 경쟁사 글에서 나온 키워드마다, 같은 주제에서 시몬스·N32가 이미 해 온 것을 나란히 놓았습니다. '경쟁사'와 '시몬스·N32'는 기사로 확인한 사실이고, '참고'와 '대응 아이디어'는 해석·제안입니다.</p>
+    <ul class="bm-pov" data-draw="pov" data-source="insights"></ul>
+  </section>
+
   <section id="brief" class="bm-groups">
     <div class="bm-card">
       <h2>오늘의 주요 글</h2>
-      <p class="note">침대 브랜드만. 자사 글을 먼저, 그다음 경쟁사 글을 최신순으로 6개까지.</p>
+      <p class="note">침대 브랜드만. 같은 소식은 하나로 묶고, 자사 글을 먼저, 그다음 경쟁사 글을 최신순으로 6개까지.</p>
       <ul class="bm-list" data-draw="brief-top" data-source="items"></ul>
     </div>
     <div class="bm-card">
@@ -203,6 +237,72 @@
       </table>
     </div>
   </section>
+  </div>
+
+  <section id="tab-interior" class="bm-panel" data-panel="interior" hidden>
+    <div class="sec">
+      <h2>인테리어 트렌드</h2>
+      <p class="note">인테리어·홈퍼니싱·침실 인테리어·가구 시장·리빙 트렌드 관련 새 기사를 평일 아침마다 Google 뉴스에서 모읍니다. 시몬스·N32 콘텐츠 기획에 참고하기 좋은 흐름 위주입니다.</p>
+    </div>
+    <div class="bm-ins">
+      <h3>오늘의 인사이트</h3>
+      <ul class="bm-ins-list" data-draw="tins" data-topic="인테리어" data-source="trend_insights"></ul>
+    </div>
+    <p class="src"><span data-draw="tday">—</span> 수집 새 기사 <b data-draw="tnum" data-topic="인테리어" data-field="오늘" data-source="trend_counts">—</b>건 · 최근 7일 <b data-draw="tnum" data-topic="인테리어" data-field="최근7일" data-source="trend_counts">—</b>건</p>
+    <ul class="bm-list" data-draw="tlist" data-topic="인테리어" data-source="trends"></ul>
+  </section>
+
+  <section id="tab-pet" class="bm-panel" data-panel="pet" hidden>
+    <div class="sec">
+      <h2>펫산업 트렌드</h2>
+      <p class="note">펫산업·반려동물 시장·펫푸드·펫테크·반려동물 헬스케어·펫보험 관련 새 기사를 평일 아침마다 Google 뉴스에서 모읍니다.</p>
+    </div>
+    <div class="bm-ins">
+      <h3>오늘의 인사이트</h3>
+      <ul class="bm-ins-list" data-draw="tins" data-topic="펫산업" data-source="trend_insights"></ul>
+    </div>
+    <p class="src"><span data-draw="tday">—</span> 수집 새 기사 <b data-draw="tnum" data-topic="펫산업" data-field="오늘" data-source="trend_counts">—</b>건 · 최근 7일 <b data-draw="tnum" data-topic="펫산업" data-field="최근7일" data-source="trend_counts">—</b>건</p>
+    <ul class="bm-list" data-draw="tlist" data-topic="펫산업" data-source="trends"></ul>
+  </section>
+
+  <section id="tab-well" class="bm-panel" data-panel="well" hidden>
+    <div class="sec">
+      <h2>웰니스 트렌드</h2>
+      <p class="note">웰니스·슬립테크·수면 산업·헬시플레저 관련 새 기사를 평일 아침마다 Google 뉴스에서 모읍니다.</p>
+    </div>
+    <div class="bm-ins">
+      <h3>오늘의 인사이트</h3>
+      <ul class="bm-ins-list" data-draw="tins" data-topic="웰니스" data-source="trend_insights"></ul>
+    </div>
+    <p class="src"><span data-draw="tday">—</span> 수집 새 기사 <b data-draw="tnum" data-topic="웰니스" data-field="오늘" data-source="trend_counts">—</b>건 · 최근 7일 <b data-draw="tnum" data-topic="웰니스" data-field="최근7일" data-source="trend_counts">—</b>건</p>
+    <ul class="bm-list" data-draw="tlist" data-topic="웰니스" data-source="trends"></ul>
+  </section>
+
+  <section id="tab-beauty" class="bm-panel" data-panel="beauty" hidden>
+    <div class="sec">
+      <h2>뷰티·패션 트렌드</h2>
+      <p class="note">뷰티 트렌드·K뷰티·화장품 시장·패션 트렌드·패션 플랫폼 관련 새 기사를 평일 아침마다 Google 뉴스에서 모읍니다.</p>
+    </div>
+    <div class="bm-ins">
+      <h3>오늘의 인사이트</h3>
+      <ul class="bm-ins-list" data-draw="tins" data-topic="뷰티·패션" data-source="trend_insights"></ul>
+    </div>
+    <p class="src"><span data-draw="tday">—</span> 수집 새 기사 <b data-draw="tnum" data-topic="뷰티·패션" data-field="오늘" data-source="trend_counts">—</b>건 · 최근 7일 <b data-draw="tnum" data-topic="뷰티·패션" data-field="최근7일" data-source="trend_counts">—</b>건</p>
+    <ul class="bm-list" data-draw="tlist" data-topic="뷰티·패션" data-source="trends"></ul>
+  </section>
+
+  <section id="tab-ai" class="bm-panel" data-panel="ai" hidden>
+    <div class="sec">
+      <h2>AI·트렌드</h2>
+      <p class="note">AI 마케팅·생성형 AI 광고·AI 커머스·AI 검색 마케팅, 그리고 인테리어·뷰티·펫·웰니스 분야의 AI 활용 마케팅 사례 기사를 평일 아침마다 Google 뉴스에서 모읍니다.</p>
+    </div>
+    <div class="bm-ins">
+      <h3>오늘의 인사이트</h3>
+      <ul class="bm-ins-list" data-draw="tins" data-topic="AI·트렌드" data-source="trend_insights"></ul>
+    </div>
+    <p class="src"><span data-draw="tday">—</span> 수집 새 기사 <b data-draw="tnum" data-topic="AI·트렌드" data-field="오늘" data-source="trend_counts">—</b>건 · 최근 7일 <b data-draw="tnum" data-topic="AI·트렌드" data-field="최근7일" data-source="trend_counts">—</b>건</p>
+    <ul class="bm-list" data-draw="tlist" data-topic="AI·트렌드" data-source="trends"></ul>
+  </section>
 </div>
 
 <script>
@@ -250,6 +350,25 @@ dash.calc('daily', {
       out.set(k, (out.get(k) || 0) + 1);
     }
     return [...out].map(([k, n]) => { const [b, d] = k.split('|'); return { 브랜드: b, 수집일: d, 건수: n }; });
+  },
+});
+
+window.BM_TOPICS = ['인테리어', '펫산업', '웰니스', '뷰티·패션', 'AI·트렌드'];
+
+dash.calc('trend_counts', {
+  title: '분야별 트렌드 기사 수',
+  description: '가장 최근 수집일, 그리고 최근 7개 수집일에 분야별로 새로 잡힌 트렌드 기사 수',
+  inputs: ['trends'],
+  fn: (trends) => {
+    const days = [...new Set(trends.map((r) => r['수집일']))].sort();
+    const last = days.length ? days[days.length - 1] : '';
+    const d7 = days.slice(-7);
+    return ['인테리어', '펫산업', '웰니스', '뷰티·패션', 'AI·트렌드'].map((t) => ({
+      분야: t,
+      수집일: last,
+      오늘: trends.filter((r) => r['분야'] === t && r['수집일'] === last).length,
+      최근7일: trends.filter((r) => r['분야'] === t && d7.includes(r['수집일'])).length,
+    }));
   },
 });
 
@@ -348,7 +467,7 @@ dash.calc('overview', {
     const rows = g.status === 'ok' && Array.isArray(g.data) ? g.data : [];
     if (!rows.length) { emptyLi(ul, '아직 인사이트가 없습니다. 평일 아침 리포트가 돌면 여기에 채워집니다.'); return; }
     const last = rows.reduce((m, r) => (r['수집일'] > m ? r['수집일'] : m), '');
-    const today = rows.filter((x) => x['수집일'] === last);
+    const today = rows.filter((x) => x['수집일'] === last && x['구분'] !== '관점' && !BM_TOPICS.includes(x['채널']) && !BM_TOPICS.includes(x['분야']));
     const byBrand = today.some((r) => r['브랜드']);
     const ordered = byBrand
       ? BM_ORDER.map((b) => today.find((r) => r['브랜드'] === b)).filter(Boolean).concat(today.filter((r) => !BM_ORDER.includes(r['브랜드'])))
@@ -394,6 +513,55 @@ dash.calc('overview', {
     }
   });
 
+  dash.draw('tins', (ul) => {
+    const g = dash.data('trend_insights');
+    const t = ul.dataset.topic;
+    ul.replaceChildren();
+    if (g.status === 'loading') { emptyLi(ul, '—'); return; }
+    const rows = g.status === 'ok' && Array.isArray(g.data) ? g.data : [];
+    const last = rows.reduce((m, r) => (r['수집일'] > m ? r['수집일'] : m), '');
+    const rs = rows.filter((x) => x['수집일'] === last && x['분야'] === t);
+    if (!rs.length) { emptyLi(ul, '아직 인사이트가 없습니다. 평일 아침 트렌드 수집이 돌면 채워집니다.'); return; }
+    for (const r of rs) {
+      const li = document.createElement('li');
+      const s = document.createElement('span'); s.textContent = r['인사이트'] || '';
+      li.append(s);
+      if (r['근거']) { const w = document.createElement('span'); w.className = 'why'; w.textContent = r['근거']; li.append(w); }
+      ul.append(li);
+    }
+  });
+  dash.draw('tday', (el) => {
+    const g = dash.data('trend_counts');
+    el.textContent = g.status === 'ok' && g.data && g.data.length && g.data[0]['수집일'] ? md(g.data[0]['수집일']) : '—';
+  });
+  dash.draw('tnum', (el) => {
+    const g = dash.data('trend_counts');
+    const t = el.dataset.topic;
+    el.dataset.where = '분야=' + encodeURIComponent(t);
+    if (g.status !== 'ok' || !g.data) { el.textContent = '—'; return; }
+    const r = g.data.find((x) => x['분야'] === t);
+    el.textContent = r ? String(r[el.dataset.field]) : '—';
+  });
+  dash.draw('tlist', (ul) => {
+    const g = dash.data('trends');
+    const t = ul.dataset.topic;
+    ul.replaceChildren();
+    if (g.status !== 'ok') { emptyLi(ul, g.status === 'loading' ? '—' : '아직 모은 기사가 없습니다. 평일 아침 트렌드 수집이 돌면 채워집니다.'); return; }
+    const days = recentDays(g.data, 7);
+    const last = lastDay(g.data);
+    const rs = g.data.filter((r) => r['분야'] === t && days.includes(r['수집일'])).sort(byTime);
+    if (!rs.length) { emptyLi(ul, '최근 7일 동안 모은 기사가 없습니다.'); return; }
+    for (const r of rs.slice(0, 40)) {
+      const li = document.createElement('li');
+      const kw = document.createElement('span'); kw.className = 'bm-kw'; kw.textContent = r['키워드'] || t;
+      li.append(kw, link(r), src((r['출처'] || '') + ' · ' + md((r['게시시각'] || r['수집일']).slice(0, 10))));
+      if (r['요약']) { const s = document.createElement('span'); s.className = 'src'; s.style.flexBasis = '100%'; s.textContent = '→ ' + r['요약']; li.append(s); }
+      if (r['수집일'] === last) { const n = document.createElement('span'); n.className = 'bm-new'; n.textContent = '새 글'; li.append(n); }
+      ul.append(li);
+    }
+    if (rs.length > 40) emptyLi(ul, '최근 7일 기사 ' + rs.length + '건 중 최신 40건만 보여 줍니다.');
+  });
+
   function tile(r) {
     const c = cls(r['브랜드']);
     const t = document.createElement('button');
@@ -426,18 +594,72 @@ dash.calc('overview', {
   dash.draw('tiles-rival', tiles('경쟁사'));
   dash.draw('tile-beauty', tiles('뷰티'));
 
-  function briefList(pick, limit, emptyText) {
+  dash.draw('pov', (ul) => {
+    const g = dash.data('insights');
+    ul.replaceChildren();
+    if (g.status === 'loading') { emptyLi(ul, '—'); return; }
+    const rows = g.status === 'ok' && Array.isArray(g.data) ? g.data.filter((r) => r['구분'] === '관점') : [];
+    const last = rows.reduce((m, r) => (r['수집일'] > m ? r['수집일'] : m), '');
+    const today = rows.filter((r) => r['수집일'] === last);
+    if (!today.length) { emptyLi(ul, '오늘은 시몬스·N32와 겹치는 경쟁사 키워드가 없습니다.'); return; }
+    const line = (cls, label, text) => {
+      const d = document.createElement('div'); d.className = 'row';
+      const l = document.createElement('span'); l.className = 'lab ' + cls; l.textContent = label;
+      const t = document.createElement('span'); t.textContent = text;
+      d.append(l, t); return d;
+    };
+    for (const r of today) {
+      const li = document.createElement('li');
+      const k = document.createElement('div'); k.className = 'kw'; k.textContent = r['키워드'] || '';
+      li.append(k);
+      if (r['경쟁사']) li.append(line('rival', '경쟁사', r['경쟁사']));
+      if (r['자사']) li.append(line('own', '시몬스·N32', r['자사']));
+      if (r['참고']) li.append(line('idea', '참고', r['참고']));
+      if (r['대응']) li.append(line('do', '대응 아이디어', r['대응']));
+      if (r['출처']) { const s2 = document.createElement('span'); s2.className = 'why'; s2.textContent = '출처: ' + r['출처']; li.append(s2); }
+      ul.append(li);
+    }
+  });
+
+  const STOP = new Set(['매트리스', '침대', '선보여', '선보인다', '공급', '출시', '진행', '개최', '오픈']);
+  function toks(t, brand) {
+    return new Set(t.replace(/[^가-힣A-Za-z0-9 ]/g, ' ').split(/\s+/).map((w) => w.replace(/(에서|으로|까지|부터|에게|와|과|의|에|을|를|은|는|이|가|도|로)$/, ''))
+      .filter((w) => w.length >= 2 && !STOP.has(w) && !brand.includes(w) && !w.includes(brand)));
+  }
+  function groupSame(rows) {
+    const groups = [];
+    for (const r of rows) {
+      const tk = toks(r['제목'], r['브랜드']);
+      const g = groups.find((x) => x.brand === r['브랜드'] && x.tks.some((s2) => [...tk].filter((w) => s2.has(w)).length >= 2));
+      if (g) { g.rows.push(r); g.tks.push(tk); } else groups.push({ brand: r['브랜드'], rows: [r], tks: [tk] });
+    }
+    const near = (a, b) => a.brand === b.brand && a.tks.some((x) => b.tks.some((y) => [...x].filter((w) => y.has(w)).length >= 2));
+    for (let i = 0; i < groups.length; i++) {
+      for (let j = groups.length - 1; j > i; j--) {
+        if (near(groups[i], groups[j])) { groups[i].rows.push(...groups[j].rows); groups[i].tks.push(...groups[j].tks); groups.splice(j, 1); }
+      }
+    }
+    return groups;
+  }
+
+  function briefList(pick, limit, emptyText, dedupe) {
     return (ul) => {
       const g = dash.data('items');
       ul.replaceChildren();
       if (g.status !== 'ok') { emptyLi(ul, '—'); return; }
       const last = lastDay(g.data);
-      const rows = pick(g.data.filter((r) => r['수집일'] === last && isBed(r))).slice(0, limit);
-      if (!rows.length) { emptyLi(ul, emptyText); return; }
-      for (const r of rows) ul.append(itemLi(r, { chip: true }));
+      const picked = pick(g.data.filter((r) => r['수집일'] === last && isBed(r)));
+      if (!picked.length) { emptyLi(ul, emptyText); return; }
+      const groups = dedupe ? groupSame(picked) : picked.map((r) => ({ rows: [r] }));
+      for (const gr of groups.slice(0, limit)) {
+        const li = itemLi(gr.rows[0], { chip: true });
+        const others = [...new Set(gr.rows.slice(1).map((x) => x['출처']).filter(Boolean))];
+        if (others.length) { const s2 = document.createElement('span'); s2.className = 'bm-same'; s2.textContent = '같은 소식: ' + others.join(' · '); li.append(s2); }
+        ul.append(li);
+      }
     };
   }
-  dash.draw('brief-top', briefList((rs) => [...rs.filter((r) => grp(r['브랜드']) === '자사').sort(byTime), ...rs.filter((r) => grp(r['브랜드']) === '경쟁사').sort(byTime)], 6, '최근 수집분에 침대 브랜드 글이 없습니다.'));
+  dash.draw('brief-top', briefList((rs) => [...rs.filter((r) => grp(r['브랜드']) === '자사').sort(byTime), ...rs.filter((r) => grp(r['브랜드']) === '경쟁사').sort(byTime)], 6, '최근 수집분에 침대 브랜드 글이 없습니다.', true));
   dash.draw('brief-yt', briefList((rs) => rs.filter((r) => r['채널'] === '유튜브').sort(byTime), 8, '최근 수집분에 유튜브 새 영상이 없습니다.'));
 
   dash.draw('events', (el) => {
@@ -580,5 +802,17 @@ dash.calc('overview', {
     }
     if (rows.length > 300) msg('앞의 300건만 보여 줍니다. 필터로 좁혀 보세요.');
   });
+})();
+</script>
+
+<script>
+(function () {
+  function show(key) {
+    for (const p of document.querySelectorAll('[data-panel]')) p.hidden = p.dataset.panel !== key;
+    for (const b of document.querySelectorAll('.bm-tab')) b.setAttribute('aria-selected', b.dataset.tab === key ? 'true' : 'false');
+  }
+  for (const b of document.querySelectorAll('.bm-tab')) {
+    b.addEventListener('click', () => { show(b.dataset.tab); dash.setLink('tab-' + b.dataset.tab); });
+  }
 })();
 </script>
