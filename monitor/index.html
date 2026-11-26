@@ -37,15 +37,29 @@
 .bm-ins-list li.beauty{border-color:color-mix(in srgb,var(--g-beauty) 30%,var(--color-border-line));background:color-mix(in srgb,var(--g-beauty) 5%,var(--color-bg))}
 .bm-ins-list li.none{opacity:.7}
 .bm-ins-list li.bm-empty{display:block;border:0;background:none;padding:0}
-.bm-pov{list-style:none;margin:0;padding:0;display:grid;gap:var(--cds-gap-sm)}
-.bm-pov li{display:grid;gap:6px;padding:var(--cds-pad-md);border-radius:var(--cds-radius);border:1px solid var(--color-border-line);background:var(--color-bg);min-width:0;overflow-wrap:anywhere}
-.bm-pov .kw{font-weight:var(--cds-font-weight-medium)}
-.bm-pov .row{display:grid;grid-template-columns:auto 1fr;gap:4px 8px;align-items:baseline;line-height:1.55}
-.bm-pov .lab{font-size:11px;white-space:nowrap;padding:0 6px;border-radius:4px;line-height:1.6}
-.bm-pov .lab.rival{background:color-mix(in srgb,var(--g-rival) 18%,transparent)}
-.bm-pov .lab.own{background:color-mix(in srgb,var(--g-own) 18%,transparent)}
-.bm-pov .lab.idea{border:1px dashed var(--color-border-line)}
-.bm-pov .lab.do{background:var(--color-fg);color:var(--color-bg)}
+.bm-pov{list-style:none;margin:0;padding:0;display:grid;gap:var(--cds-gap-md)}
+.bm-pov>li{display:grid;gap:10px;padding:var(--cds-pad-lg);border-radius:var(--cds-radius);border:1px solid var(--color-border-line);background:var(--color-bg);min-width:0;overflow-wrap:anywhere}
+.bm-pov .hd{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px}
+.bm-pov .num{font-family:var(--font-anthropic-serif);font-size:1.25rem;line-height:1;color:var(--color-fg-muted);font-variant-numeric:tabular-nums}
+.bm-pov .kw{font-weight:var(--cds-font-weight-medium);font-size:1.08rem}
+.bm-pov .who{font-size:11px;padding:1px 8px;border-radius:999px;background:color-mix(in srgb,var(--g-rival) 16%,transparent);white-space:nowrap}
+.bm-pov.beauty .who{background:color-mix(in srgb,var(--g-beauty) 16%,transparent)}
+.bm-pov .sum{margin:0;font-weight:var(--cds-font-weight-medium);line-height:1.55;max-width:75ch}
+.bm-pov .sum::before{content:"한 줄 정리 · ";color:var(--color-fg-muted);font-weight:400;font-size:var(--cds-font-size-caption)}
+.bm-pov .cmp{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:var(--cds-gap-sm)}
+.bm-pov .box{border-radius:var(--cds-radius);padding:10px 12px;display:grid;gap:4px;align-content:start;min-width:0}
+.bm-pov .box.rival{background:color-mix(in srgb,var(--g-rival) 8%,var(--color-bg));border-top:3px solid var(--g-rival)}
+.bm-pov .box.own{background:color-mix(in srgb,var(--g-own) 8%,var(--color-bg));border-top:3px solid var(--g-own)}
+.bm-pov .box.beauty{background:color-mix(in srgb,var(--g-beauty) 8%,var(--color-bg));border-top:3px solid var(--g-beauty)}
+.bm-pov .box.market{background:var(--color-panel);border-top:3px solid var(--color-fg-muted)}
+.bm-pov .box b{font-size:var(--cds-font-size-caption);font-weight:var(--cds-font-weight-medium);color:var(--color-fg-muted)}
+.bm-pov .box ul{margin:0;padding-left:1.1em;display:grid;gap:3px;line-height:1.5}
+.bm-pov .box .none{color:var(--color-fg-muted)}
+.bm-pov .do{display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:start;padding:10px 12px;border-radius:var(--cds-radius);background:var(--color-fg);color:var(--color-bg);line-height:1.55}
+.bm-pov .do b{font-size:var(--cds-font-size-caption);font-weight:var(--cds-font-weight-medium);white-space:nowrap;opacity:.8}
+.bm-pov .src{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted)}
+.bm-legend2{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:var(--cds-font-size-caption);color:var(--color-fg-muted)}
+.bm-legend2 i{display:inline-block;width:10px;height:3px;border-radius:2px;vertical-align:middle;margin-right:5px}
 .bm-same{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);flex-basis:100%}
 .bm-inv{width:100%;border-collapse:collapse;font-size:var(--cds-font-size-caption);font-variant-numeric:tabular-nums}
 .bm-inv td{padding:4px 0;border-top:1px solid var(--color-border-line);vertical-align:top}
@@ -166,7 +180,8 @@
 
   <section id="pov" class="bm-card">
     <h2>시몬스·N32 관점</h2>
-    <p class="note">오늘 경쟁사 글에서 나온 키워드마다, 같은 주제에서 시몬스·N32가 이미 해 온 것을 나란히 놓았습니다. '경쟁사'와 '시몬스·N32'는 기사로 확인한 사실이고, '참고'와 '대응 아이디어'는 해석·제안입니다.</p>
+    <p class="note">오늘 경쟁사가 꺼낸 키워드마다 시몬스·N32와 나란히 비교합니다. 색 상자 안은 기사로 확인한 사실, '한 줄 정리'와 검은 상자(대응 아이디어)는 해석·제안입니다.</p>
+    <div class="bm-legend2"><span><i style="background:var(--g-rival)"></i>경쟁사가 말한 것</span><span><i style="background:var(--g-own)"></i>시몬스·N32가 해 온 것</span><span><i style="background:var(--color-fg)"></i>대응 아이디어</span></div>
     <ul class="bm-pov" data-draw="pov" data-source="insights"></ul>
   </section>
 
@@ -192,6 +207,10 @@
   <section id="beauty" class="bm-card bm-beauty">
     <h2 style="display:flex;align-items:center;gap:8px"><span class="dot beauty"></span>몽클로스 (뷰티)</h2>
     <p class="note">뷰티 브랜드라 침대 브랜드 집계와 목록에서 빼고 여기에만 모읍니다. 최근 7일 글입니다.</p>
+    <h3 style="margin-top:var(--cds-gap-sm)">몽클로스 관점</h3>
+    <p class="note">요즘 뷰티·생활 흐름과 몽클로스 소식을 나란히 놓았습니다. 회색 상자(시장 흐름)와 분홍 상자(몽클로스)는 기사로 확인한 사실, '한 줄 정리'와 검은 상자는 해석·제안입니다.</p>
+    <ul class="bm-pov beauty" data-draw="pov-beauty" data-source="insights"></ul>
+    <h3 style="margin-top:var(--cds-gap-sm)">최근 글</h3>
     <div class="bm-beauty-top">
       <div data-draw="tile-beauty" data-source="by_brand"></div>
       <ul class="bm-list" data-draw="beauty-list" data-source="items"></ul>
@@ -467,7 +486,7 @@ dash.calc('overview', {
     const rows = g.status === 'ok' && Array.isArray(g.data) ? g.data : [];
     if (!rows.length) { emptyLi(ul, '아직 인사이트가 없습니다. 평일 아침 리포트가 돌면 여기에 채워집니다.'); return; }
     const last = rows.reduce((m, r) => (r['수집일'] > m ? r['수집일'] : m), '');
-    const today = rows.filter((x) => x['수집일'] === last && x['구분'] !== '관점' && !BM_TOPICS.includes(x['채널']) && !BM_TOPICS.includes(x['분야']));
+    const today = rows.filter((x) => x['수집일'] === last && !String(x['구분'] || '').endsWith('관점') && !BM_TOPICS.includes(x['채널']) && !BM_TOPICS.includes(x['분야']));
     const byBrand = today.some((r) => r['브랜드']);
     const ordered = byBrand
       ? BM_ORDER.map((b) => today.find((r) => r['브랜드'] === b)).filter(Boolean).concat(today.filter((r) => !BM_ORDER.includes(r['브랜드'])))
@@ -594,32 +613,50 @@ dash.calc('overview', {
   dash.draw('tiles-rival', tiles('경쟁사'));
   dash.draw('tile-beauty', tiles('뷰티'));
 
-  dash.draw('pov', (ul) => {
-    const g = dash.data('insights');
-    ul.replaceChildren();
-    if (g.status === 'loading') { emptyLi(ul, '—'); return; }
-    const rows = g.status === 'ok' && Array.isArray(g.data) ? g.data.filter((r) => r['구분'] === '관점') : [];
-    const last = rows.reduce((m, r) => (r['수집일'] > m ? r['수집일'] : m), '');
-    const today = rows.filter((r) => r['수집일'] === last);
-    if (!today.length) { emptyLi(ul, '오늘은 시몬스·N32와 겹치는 경쟁사 키워드가 없습니다.'); return; }
-    const line = (cls, label, text) => {
-      const d = document.createElement('div'); d.className = 'row';
-      const l = document.createElement('span'); l.className = 'lab ' + cls; l.textContent = label;
-      const t = document.createElement('span'); t.textContent = text;
-      d.append(l, t); return d;
+  function povBox(cls, label, v, noneText) {
+    const d = document.createElement('div'); d.className = 'box ' + cls;
+    const h = document.createElement('b'); h.textContent = label; d.append(h);
+    const items = (Array.isArray(v) ? v : String(v || '').split(/\s*\n\s*/)).map((x) => String(x).trim()).filter(Boolean);
+    if (!items.length) { const p = document.createElement('span'); p.className = 'none'; p.textContent = noneText; d.append(p); return d; }
+    const u = document.createElement('ul');
+    for (const x of items) { const li = document.createElement('li'); li.textContent = x; u.append(li); }
+    d.append(u); return d;
+  }
+  function povDraw(kind, emptyText, labels) {
+    return (ul) => {
+      const g = dash.data('insights');
+      ul.replaceChildren();
+      if (g.status === 'loading') { emptyLi(ul, '—'); return; }
+      const rows = g.status === 'ok' && Array.isArray(g.data) ? g.data.filter((r) => r['구분'] === kind) : [];
+      const last = rows.reduce((m, r) => (r['수집일'] > m ? r['수집일'] : m), '');
+      const today = rows.filter((r) => r['수집일'] === last);
+      if (!today.length) { emptyLi(ul, emptyText); return; }
+      today.forEach((r, i) => {
+        const li = document.createElement('li');
+        const hd = document.createElement('div'); hd.className = 'hd';
+        const n = document.createElement('span'); n.className = 'num'; n.textContent = String(i + 1).padStart(2, '0');
+        const raw = r['키워드'] || ''; const m = raw.match(/^(.*?)\s*\(([^)]*)\)\s*$/);
+        const k = document.createElement('span'); k.className = 'kw'; k.textContent = m ? m[1] : raw;
+        hd.append(n, k);
+        if (m) { const w = document.createElement('span'); w.className = 'who'; w.textContent = m[2]; hd.append(w); }
+        li.append(hd);
+        if (r['참고']) { const p = document.createElement('p'); p.className = 'sum'; p.textContent = r['참고']; li.append(p); }
+        const cmp = document.createElement('div'); cmp.className = 'cmp';
+        cmp.append(povBox(labels[0][0], labels[0][1], r['경쟁사'], '확인된 자료 없음'), povBox(labels[1][0], labels[1][1], r['자사'], '확인된 자사 자료 없음'));
+        li.append(cmp);
+        if (r['대응']) {
+          const d = document.createElement('div'); d.className = 'do';
+          const b = document.createElement('b'); b.textContent = '대응 아이디어';
+          const t = document.createElement('span'); t.textContent = Array.isArray(r['대응']) ? r['대응'].join(' / ') : r['대응'];
+          d.append(b, t); li.append(d);
+        }
+        if (r['출처']) { const s2 = document.createElement('span'); s2.className = 'src'; s2.textContent = '출처: ' + r['출처']; li.append(s2); }
+        ul.append(li);
+      });
     };
-    for (const r of today) {
-      const li = document.createElement('li');
-      const k = document.createElement('div'); k.className = 'kw'; k.textContent = r['키워드'] || '';
-      li.append(k);
-      if (r['경쟁사']) li.append(line('rival', '경쟁사', r['경쟁사']));
-      if (r['자사']) li.append(line('own', '시몬스·N32', r['자사']));
-      if (r['참고']) li.append(line('idea', '참고', r['참고']));
-      if (r['대응']) li.append(line('do', '대응 아이디어', r['대응']));
-      if (r['출처']) { const s2 = document.createElement('span'); s2.className = 'why'; s2.textContent = '출처: ' + r['출처']; li.append(s2); }
-      ul.append(li);
-    }
-  });
+  }
+  dash.draw('pov', povDraw('관점', '오늘은 시몬스·N32와 겹치는 경쟁사 키워드가 없습니다.', [['rival', '경쟁사가 말한 것'], ['own', '시몬스·N32가 해 온 것']]));
+  dash.draw('pov-beauty', povDraw('몽클로스관점', '오늘은 몽클로스와 연결할 흐름이 없습니다.', [['market', '시장·업계 흐름'], ['beauty', '몽클로스가 해 온 것']]));
 
   const STOP = new Set(['매트리스', '침대', '선보여', '선보인다', '공급', '출시', '진행', '개최', '오픈']);
   function toks(t, brand) {
